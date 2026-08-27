@@ -21,6 +21,9 @@ export const metadata: Metadata = {
   },
   description:
     "El marketplace que conecta micro-creadores de contenido UGC con marcas pequeñas y medianas. Briefs claros, contratos automáticos, pagos protegidos y métricas reales.",
+  icons: {
+    icon: "/logo/logo.png",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

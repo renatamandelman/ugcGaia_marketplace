@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
-import { Logo } from "@/components/ui/logo";
 import { ButtonLink } from "@/components/ui/button";
 import { MenuIcon, XIcon } from "@/components/ui/icons";
 import { cn } from "@/components/ui/utils";
@@ -19,7 +19,16 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-bone/60 bg-paper/85 backdrop-blur-md">
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-5 sm:px-8">
-        <Logo />
+        <Link href="/" aria-label="GaiaUGC — inicio">
+          <Image
+            src="/logo/logoVarianteHorizontal.png"
+            alt="GaiaUGC"
+            width={400}
+            height={240}
+            className="h-10 w-auto"
+            priority
+          />
+        </Link>
 
         {/* Desktop nav */}
         <nav className="hidden items-center gap-1 md:flex">
