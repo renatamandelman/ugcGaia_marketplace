@@ -23,9 +23,9 @@ export function Navbar() {
           <Image
             src="/logo/logoVarianteHorizontal.png"
             alt="GaiaUGC"
-            width={400}
-            height={240}
-            className="h-10 w-auto"
+            width={600}
+            height={340}
+            className="h-15 w-auto"
             priority
           />
         </Link>
