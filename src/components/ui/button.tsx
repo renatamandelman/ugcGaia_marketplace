@@ -2,16 +2,20 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { cn } from "./utils";
 
-type ButtonVariant = "primary" | "secondary" | "ghost";
+type ButtonVariant = "primary" | "secondary" | "ghost" | "ember";
 type ButtonSize = "sm" | "md" | "lg";
 
 const variantClasses: Record<ButtonVariant, string> = {
+  /* Bosque: el color de la marca, para las acciones que generan plata */
   primary:
-    "bg-brand-500 text-white hover:bg-brand-600 focus-visible:outline-brand-600 shadow-sm shadow-brand-500/20",
+    "bg-bosque text-white hover:bg-pino focus-visible:outline-brasa shadow-sm shadow-bosque/20",
+  /* Crema: botón luminoso para superficies oscuras */
+  ember:
+    "bg-brasa text-white hover:bg-brasa-fuego focus-visible:outline-brasa shadow-sm shadow-brasa/30",
   secondary:
-    "bg-white text-zinc-900 ring-1 ring-inset ring-zinc-300 hover:bg-zinc-50 hover:ring-zinc-400 focus-visible:outline-brand-600",
+    "bg-white text-carbon ring-1 ring-inset ring-marfil hover:bg-crema hover:ring-oro focus-visible:outline-brasa",
   ghost:
-    "bg-transparent text-zinc-700 hover:bg-zinc-100 focus-visible:outline-brand-600",
+    "bg-transparent text-zinc-700 hover:bg-crema focus-visible:outline-brasa",
 };
 
 const sizeClasses: Record<ButtonSize, string> = {

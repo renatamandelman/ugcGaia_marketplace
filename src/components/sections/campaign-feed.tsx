@@ -7,7 +7,7 @@ export function CampaignFeed() {
   const featured = campaigns.filter((campaign) => campaign.status !== "filled").slice(0, 3);
 
   return (
-    <Section className="bg-zinc-50/60">
+    <Section>
       <SectionHeading
         eyebrow="Para creadores"
         title="Campañas activas en este momento"

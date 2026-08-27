@@ -3,17 +3,23 @@ import { cn } from "./utils";
 
 interface LogoProps {
   className?: string;
+  /** tone="light" for dark surfaces (bosque backgrounds) */
+  tone?: "dark" | "light";
 }
 
 /**
- * GaiaUGC brand mark: orange rounded square + wordmark.
- * Pure CSS, no image assets needed for the demo.
+ * GaiaUGC brand mark: bosque (forest green) square + champán spark + wordmark.
+ * dark tone: Gaia in carbon + UGC in ámbar (for light surfaces).
+ * light tone: Gaia in crema + UGC in champán (for dark surfaces).
  */
-export function Logo({ className }: LogoProps) {
+export function Logo({ className, tone = "dark" }: LogoProps) {
+  const wordmark = tone === "dark" ? "text-carbon" : "text-crema";
+  const ugc = tone === "dark" ? "text-ambar" : "text-champan";
+
   return (
     <Link href="/" className={cn("flex items-center gap-2.5", className)}>
       <span
-        className="flex size-9 items-center justify-center rounded-xl bg-brand-500 shadow-sm shadow-brand-500/30"
+        className="flex size-9 items-center justify-center rounded-xl bg-bosque shadow-sm shadow-bosque/30"
         aria-hidden
       >
         <svg
@@ -21,7 +27,7 @@ export function Logo({ className }: LogoProps) {
           height="20"
           viewBox="0 0 24 24"
           fill="none"
-          stroke="white"
+          stroke="#F2C778"
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -30,9 +36,9 @@ export function Logo({ className }: LogoProps) {
           <path d="M12 3l1.9 5.7a2 2 0 0 0 1.4 1.4L21 12l-5.7 1.9a2 2 0 0 0-1.4 1.4L12 21l-1.9-5.7a2 2 0 0 0-1.4-1.4L3 12l5.7-1.9a2 2 0 0 0 1.4-1.4L12 3Z" />
         </svg>
       </span>
-      <span className="text-lg font-semibold tracking-tight text-zinc-900">
+      <span className={cn("text-lg font-semibold tracking-tight", wordmark)}>
         Gaia
-        <span className="text-brand-500">UGC</span>
+        <span className={ugc}>UGC</span>
       </span>
     </Link>
   );

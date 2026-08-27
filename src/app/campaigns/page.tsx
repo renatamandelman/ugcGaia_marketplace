@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function CampaignsPage() {
   return (
-    <Section className="bg-zinc-50/60">
+    <Section>
       <SectionHeading
         eyebrow="Marketplace"
         title="Campañas activas"

@@ -27,7 +27,7 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
   return (
     <Link
       href={`/campaigns/${campaign.id}`}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white transition-all hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lg hover:shadow-brand-500/10"
+      className="group flex flex-col overflow-hidden rounded-2xl border border-marfil/70 bg-white transition-all hover:-translate-y-0.5 hover:border-oro/80 hover:shadow-lg hover:shadow-oro/15"
     >
       {/* Visual header */}
       <div
@@ -58,17 +58,17 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
 
       {/* Body */}
       <div className="flex flex-1 flex-col p-5">
-        <h3 className="text-base font-semibold tracking-tight text-zinc-900">
+        <h3 className="text-base font-semibold tracking-tight text-carbon">
           {campaign.title}
         </h3>
         <p className="mt-2 line-clamp-2 text-sm leading-6 text-zinc-600">
           {campaign.brief}
         </p>
 
-        <dl className="mt-5 grid grid-cols-3 gap-3 border-t border-zinc-100 pt-4">
+        <dl className="mt-5 grid grid-cols-3 gap-3 border-t border-oro/20 pt-4">
           <div>
             <dt className="text-xs text-zinc-500">Presupuesto</dt>
-            <dd className="mt-0.5 text-sm font-semibold text-zinc-900">
+            <dd className="mt-0.5 text-sm font-semibold text-carbon">
               {formatBudget(campaign.budget)}
             </dd>
           </div>
@@ -76,7 +76,7 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
             <dt className="flex items-center gap-1 text-xs text-zinc-500">
               <UsersIcon width={12} height={12} /> Aplicaciones
             </dt>
-            <dd className="mt-0.5 text-sm font-semibold text-zinc-900">
+            <dd className="mt-0.5 text-sm font-semibold text-carbon">
               {campaign.applications}
             </dd>
           </div>
@@ -84,13 +84,13 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
             <dt className="flex items-center gap-1 text-xs text-zinc-500">
               <ClockIcon width={12} height={12} /> Deadline
             </dt>
-            <dd className="mt-0.5 text-xs font-medium text-zinc-900">
+            <dd className="mt-0.5 text-xs font-medium text-carbon">
               {deadlineLabel(campaign.deadline)}
             </dd>
           </div>
         </dl>
 
-        <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 transition-colors group-hover:text-brand-700">
+        <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-cobre transition-colors group-hover:text-brasa">
           Ver brief
           <ArrowRightIcon
             width={16}

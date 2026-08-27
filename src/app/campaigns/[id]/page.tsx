@@ -45,7 +45,7 @@ export default async function CampaignDetailPage({
     <div className="mx-auto w-full max-w-6xl px-5 py-10 sm:px-8 sm:py-14">
       <Link
         href="/campaigns"
-        className="inline-flex items-center gap-2 text-sm font-medium text-zinc-500 transition-colors hover:text-brand-600"
+        className="inline-flex items-center gap-2 text-sm font-medium text-cobre transition-colors hover:text-brasa"
       >
         <ArrowLeftIcon width={16} height={16} />
         Volver a campañas
@@ -66,7 +66,7 @@ export default async function CampaignDetailPage({
           <div className="mt-4 flex items-center gap-2.5">
             <Avatar name={campaign.brand} size="md" />
             <div>
-              <p className="text-sm font-semibold text-zinc-900">
+              <p className="text-sm font-semibold text-carbon">
                 {campaign.brand}
               </p>
               <p className="text-xs text-zinc-500">
@@ -77,7 +77,7 @@ export default async function CampaignDetailPage({
 
           <div className="mt-8 space-y-8">
             <div>
-              <h2 className="text-lg font-semibold tracking-tight text-zinc-900">
+              <h2 className="text-lg font-semibold tracking-tight text-carbon">
                 El brief
               </h2>
               <p className="mt-3 text-base leading-8 text-zinc-600">
@@ -86,13 +86,13 @@ export default async function CampaignDetailPage({
             </div>
 
             <div>
-              <h2 className="text-lg font-semibold tracking-tight text-zinc-900">
+              <h2 className="text-lg font-semibold tracking-tight text-carbon">
                 Qué pedimos
               </h2>
               <ul className="mt-4 space-y-3">
                 {campaign.requirements.map((requirement) => (
                   <li key={requirement} className="flex items-start gap-3">
-                    <span className="mt-1 flex size-5 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-600">
+                    <span className="mt-1 flex size-5 shrink-0 items-center justify-center rounded-full bg-oro/20 text-cobre">
                       <CheckIcon width={12} height={12} />
                     </span>
                     <span className="text-sm leading-6 text-zinc-700">
@@ -104,7 +104,7 @@ export default async function CampaignDetailPage({
             </div>
 
             <div>
-              <h2 className="text-lg font-semibold tracking-tight text-zinc-900">
+              <h2 className="text-lg font-semibold tracking-tight text-carbon">
                 Entregables
               </h2>
               <ul className="mt-4 space-y-3">
@@ -132,7 +132,7 @@ export default async function CampaignDetailPage({
                   <DollarIcon width={16} height={16} />
                   Presupuesto por creador
                 </dt>
-                <dd className="text-xl font-semibold text-zinc-900">
+                <dd className="text-xl font-semibold text-carbon">
                   {formatBudget(campaign.budget)}
                 </dd>
               </div>
@@ -141,7 +141,7 @@ export default async function CampaignDetailPage({
                   <ClockIcon width={16} height={16} />
                   Deadline
                 </dt>
-                <dd className="text-sm font-medium text-zinc-900">
+                <dd className="text-sm font-medium text-carbon">
                   {deadlineLabel(campaign.deadline)}
                 </dd>
               </div>
@@ -150,7 +150,7 @@ export default async function CampaignDetailPage({
                   <UsersIcon width={16} height={16} />
                   Vacantes
                 </dt>
-                <dd className="text-sm font-medium text-zinc-900">
+                <dd className="text-sm font-medium text-carbon">
                   {campaign.slots} creador{campaign.slots > 1 ? "es" : ""}
                 </dd>
               </div>
@@ -159,7 +159,7 @@ export default async function CampaignDetailPage({
                   <VideoIcon width={16} height={16} />
                   Aplicaciones
                 </dt>
-                <dd className="text-sm font-medium text-zinc-900">
+                <dd className="text-sm font-medium text-carbon">
                   {campaign.applications}
                 </dd>
               </div>

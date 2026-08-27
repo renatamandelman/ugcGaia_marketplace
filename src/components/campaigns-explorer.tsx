@@ -35,8 +35,8 @@ export function CampaignsExplorer({ campaigns }: CampaignsExplorerProps) {
             className={cn(
               "rounded-full px-4 py-2 text-sm font-medium transition-colors",
               active === category
-                ? "bg-zinc-900 text-white"
-                : "bg-white text-zinc-600 ring-1 ring-inset ring-zinc-300 hover:bg-zinc-50"
+                ? "bg-bosque text-white shadow-sm shadow-bosque/25"
+                : "bg-white text-zinc-600 ring-1 ring-inset ring-oro/45 hover:bg-oro/10"
             )}
           >
             {category}

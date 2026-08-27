@@ -31,7 +31,7 @@ const trustFeatures = [
 
 export function TrustStats() {
   return (
-    <Section id="confianza" className="bg-zinc-50/60">
+    <Section id="confianza">
       <SectionHeading
         eyebrow="Transparencia"
         title="La confianza no se promete, se construye"
@@ -42,9 +42,9 @@ export function TrustStats() {
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="rounded-2xl border border-zinc-200 bg-white p-6 text-center"
+            className="rounded-2xl border border-marfil/70 bg-white p-6 text-center shadow-sm"
           >
-            <dd className="text-3xl font-semibold tracking-tight text-brand-600 sm:text-4xl">
+            <dd className="text-3xl font-semibold tracking-tight text-ambar sm:text-4xl">
               {stat.value}
             </dd>
             <dt className="mt-2 text-sm leading-5 text-zinc-600">
@@ -58,12 +58,12 @@ export function TrustStats() {
         {trustFeatures.map((feature) => (
           <div
             key={feature.title}
-            className="rounded-2xl border border-zinc-200 bg-white p-6"
+            className="rounded-2xl border border-marfil/70 bg-white p-6"
           >
-            <span className="flex size-11 items-center justify-center rounded-xl bg-brand-500/10 text-brand-600">
+            <span className="flex size-11 items-center justify-center rounded-xl bg-brasa/10 text-brasa">
               <feature.icon width={22} height={22} />
             </span>
-            <h3 className="mt-4 font-semibold tracking-tight text-zinc-900">
+            <h3 className="mt-4 font-semibold tracking-tight text-carbon">
               {feature.title}
             </h3>
             <p className="mt-2 text-sm leading-6 text-zinc-600">

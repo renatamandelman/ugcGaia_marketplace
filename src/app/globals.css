@@ -1,25 +1,28 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #18181b;
+  --background: #f7f4ee; /* crema */
+  --foreground: #0a0a0a; /* carbon */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  /* Gaia brand palette — primary #FF3C00 */
-  --color-brand-50: #fff4f0;
-  --color-brand-100: #ffe6db;
-  --color-brand-200: #ffc9b3;
-  --color-brand-300: #ffa580;
-  --color-brand-400: #ff7a4d;
-  --color-brand-500: #ff3c00;
-  --color-brand-600: #d93200;
-  --color-brand-700: #b32b00;
-  --color-brand-800: #8a2200;
-  --color-brand-900: #661a00;
+  /* Gaia brand palette — story: raíces (verde), valor (dorado), acción (brasa) */
+  --color-bosque: #022720; /* primary action + dark surfaces */
+  --color-pino: #044036; /* hover of primary, borders on dark */
+  --color-brasa: #f26b1f; /* vivid accent: links, active states, focus */
+  --color-brasa-fuego: #d95a12; /* hover of accent */
+  --color-oro: #c9a84c; /* premium highlights, ratings */
+  --color-champan: #f2c778; /* stars, fine warm lines, light gold */
+  --color-ambar: #be6b03; /* large display values on light */
+  --color-cobre: #582b02; /* readable text accents on light */
+  --color-crema: #f7f4ee; /* base background */
+  --color-crema-profunda: #f0e8d8; /* section bands, soft fills */
+  --color-marfil: #e8d5a3; /* warm borders, separators */
+  --color-carbon: #0a0a0a; /* text */
+  --color-carbon-calido: #1c1a14; /* warm near-black text */
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -32,6 +35,7 @@ body {
 }
 
 /* Anchor targets clear the sticky header */
-section[id], div[id] {
+section[id],
+div[id] {
   scroll-margin-top: 5.5rem;
 }
