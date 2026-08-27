@@ -6,16 +6,16 @@ type ButtonVariant = "primary" | "secondary" | "ghost" | "ember";
 type ButtonSize = "sm" | "md" | "lg";
 
 const variantClasses: Record<ButtonVariant, string> = {
-  /* Brand: el naranja de la marca, con texto en tinta (5.3:1 AA+) */
+  /* Brand: verde bosque de la marca — identidad en las acciones que generan plata */
   primary:
-    "bg-brand text-ink hover:bg-brand-hover focus-visible:outline-brand shadow-sm shadow-brand/25",
-  /* Ember: botón luminoso (papel) para superficies oscuras */
+    "bg-brand text-white hover:bg-brand-hover focus-visible:outline-gold shadow-sm shadow-brand/25",
+  /* Ember: dorado champán luminoso para superficies verdes oscuras */
   ember:
-    "bg-paper text-ink hover:bg-white focus-visible:outline-brand shadow-sm shadow-ink/20",
+    "bg-gold text-ink hover:bg-spark focus-visible:outline-gold shadow-sm shadow-brand/25",
   secondary:
-    "bg-white text-ink ring-1 ring-inset ring-bone hover:bg-paper-deep hover:ring-brand/50 focus-visible:outline-brand",
+    "bg-white text-ink ring-1 ring-inset ring-bone hover:bg-paper-deep hover:ring-brand/50 focus-visible:outline-gold",
   ghost:
-    "bg-transparent text-taupe hover:bg-paper-deep hover:text-ink focus-visible:outline-brand",
+    "bg-transparent text-taupe hover:bg-paper-deep hover:text-ink focus-visible:outline-gold",
 };
 
 const sizeClasses: Record<ButtonSize, string> = {

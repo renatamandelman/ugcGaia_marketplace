@@ -22,7 +22,7 @@ function CreatorCard({ creator }: { creator: Creator }) {
             {creator.handle} · {creator.city}
           </p>
         </div>
-        <span className="ml-auto shrink-0 rounded-lg bg-brand/20 px-2.5 py-1 text-xs font-semibold text-brand-deep">
+        <span className="ml-auto shrink-0 rounded-lg bg-brand/20 px-2.5 py-1 text-xs font-semibold text-brand">
           {formatFollowers(creator.followers)}
         </span>
       </div>
@@ -35,7 +35,7 @@ function CreatorCard({ creator }: { creator: Creator }) {
         {creator.tags.map((tag) => (
           <span
             key={tag}
-            className="rounded-full bg-brand/20 px-2.5 py-1 text-xs font-medium text-brand-deep"
+            className="rounded-full bg-brand/20 px-2.5 py-1 text-xs font-medium text-brand"
           >
             {tag}
           </span>

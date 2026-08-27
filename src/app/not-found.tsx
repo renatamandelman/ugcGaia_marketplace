@@ -4,7 +4,7 @@ import { ButtonLink } from "@/components/ui/button";
 export default function NotFound() {
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col items-center px-5 py-24 text-center sm:px-8">
-      <p className="text-sm font-semibold uppercase tracking-widest text-brand-deep">
+      <p className="text-sm font-semibold uppercase tracking-widest text-brand">
         Error 404
       </p>
       <h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">

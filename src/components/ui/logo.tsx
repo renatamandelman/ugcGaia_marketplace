@@ -3,18 +3,18 @@ import { cn } from "./utils";
 
 interface LogoProps {
   className?: string;
-  /** tone="light" for dark (ink) surfaces */
+  /** tone="light" for dark (brand green) surfaces */
   tone?: "dark" | "light";
 }
 
 /**
- * GaiaUGC brand mark: brand (vivid orange) square + ink spark + wordmark.
- * dark tone: Gaia in ink + UGC in brand (for light surfaces).
- * light tone: Gaia in paper + UGC in brand (for dark surfaces).
+ * GaiaUGC brand mark: brand (forest green) square + chartreuse spark + wordmark.
+ * dark tone: Gaia in ink + UGC in brand-deep (olive, readable on paper).
+ * light tone: Gaia in paper + UGC in gold (champagne, readable on green).
  */
 export function Logo({ className, tone = "dark" }: LogoProps) {
   const wordmark = tone === "dark" ? "text-ink" : "text-paper";
-  const ugc = "text-brand";
+  const ugc = tone === "dark" ? "text-brand" : "text-gold";
 
   return (
     <Link href="/" className={cn("flex items-center gap-2.5", className)}>
@@ -27,7 +27,7 @@ export function Logo({ className, tone = "dark" }: LogoProps) {
           height="20"
           viewBox="0 0 24 24"
           fill="none"
-          stroke="#1A1A1A"
+          stroke="#D4E33D"
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"

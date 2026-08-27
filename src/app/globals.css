@@ -9,16 +9,18 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  /* Gaia brand palette — playful editorial: papel, tinta y naranja */
-  --color-brand: #ff4d26; /* vivid accent: primary CTA, active states, ratings */
-  --color-brand-hover: #e63e1b; /* hover of brand */
-  --color-brand-deep: #c2411a; /* readable accent text on light (4.6:1 AA) */
-  --color-ink: #1a1a1a; /* primary text + dark surfaces */
-  --color-paper: #f7f3ee; /* base background (marfil) */
+  /* Gaia brand palette — bosque dorado, ejecución divertida */
+  --color-brand: #022720; /* deep forest: primary CTA, dark surfaces, display values */
+  --color-brand-hover: #044036; /* pino: hover of brand surfaces */
+  --color-gold: #f2c778; /* champán: stars, glows, buttons on dark green */
+  --color-spark: #d4e33d; /* chartreuse spark: playful micro-accents, fun hovers */
+  --color-brand-deep: #5a6614; /* olive: readable accent text on light (5.5:1 AA) */
+  --color-ink: #1a1a1a; /* primary text */
+  --color-paper: #f7f4ee; /* base background (crema) */
   --color-paper-deep: #efe9e1; /* section bands, soft fills, hovers */
-  --color-bone: #e8e2d9; /* borders, separators */
+  --color-bone: #e8d5a3; /* marfil: warm borders, separators */
   --color-taupe: #6b6154; /* secondary text (warm gray, 5.3:1 AA) */
-  --color-clay: #9a5440; /* avatar fills, secondary warm accent */
+  --color-clay: #8c6b3c; /* bronze: avatar fills, secondary warm accent */
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);

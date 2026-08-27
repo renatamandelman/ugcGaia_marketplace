@@ -45,7 +45,7 @@ export default async function CampaignDetailPage({
     <div className="mx-auto w-full max-w-6xl px-5 py-10 sm:px-8 sm:py-14">
       <Link
         href="/campaigns"
-        className="inline-flex items-center gap-2 text-sm font-medium text-brand-deep transition-colors hover:text-brand"
+        className="inline-flex items-center gap-2 text-sm font-medium text-brand transition-colors hover:text-brand"
       >
         <ArrowLeftIcon width={16} height={16} />
         Volver a campañas
@@ -92,7 +92,7 @@ export default async function CampaignDetailPage({
               <ul className="mt-4 space-y-3">
                 {campaign.requirements.map((requirement) => (
                   <li key={requirement} className="flex items-start gap-3">
-                    <span className="mt-1 flex size-5 shrink-0 items-center justify-center rounded-full bg-brand/20 text-brand-deep">
+                    <span className="mt-1 flex size-5 shrink-0 items-center justify-center rounded-full bg-brand/20 text-brand">
                       <CheckIcon width={12} height={12} />
                     </span>
                     <span className="text-sm leading-6 text-taupe">

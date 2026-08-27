@@ -30,7 +30,7 @@ const columns = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-paper/10 bg-ink">
+    <footer className="border-t border-paper/10 bg-brand">
       <div className="mx-auto w-full max-w-6xl px-5 py-14 sm:px-8">
         <div className="grid gap-10 md:grid-cols-[1.4fr_repeat(3,1fr)]">
           <div>
@@ -52,7 +52,7 @@ export function Footer() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-sm text-paper/70 transition-colors hover:text-brand"
+                      className="text-sm text-paper/70 transition-colors hover:text-gold"
                     >
                       {link.label}
                     </Link>
@@ -69,7 +69,7 @@ export function Footer() {
             reservados.
           </p>
           <p>
-            Hecho con <span className="text-brand">♥</span> para la economía de
+            Hecho con <span className="text-gold">♥</span> para la economía de
             los creadores.
           </p>
         </div>

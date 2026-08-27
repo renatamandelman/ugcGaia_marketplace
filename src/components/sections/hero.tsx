@@ -26,7 +26,7 @@ export function Hero() {
         <div className="grid items-center gap-14 lg:grid-cols-[1.1fr_0.9fr]">
           {/* Copy */}
           <div>
-            <p className="inline-flex items-center gap-2 rounded-full border border-brand/40 bg-brand/15 px-3.5 py-1.5 text-xs font-medium text-brand-deep">
+            <p className="inline-flex items-center gap-2 rounded-full border border-brand/40 bg-brand/15 px-3.5 py-1.5 text-xs font-medium text-brand">
               <SparklesIcon width={14} height={14} />
               El marketplace de micro-creadores UGC
             </p>
@@ -73,7 +73,7 @@ export function Hero() {
               {/* Mini campaign card */}
               <div className="rounded-2xl border border-bone/70 bg-white p-5 shadow-sm">
                 <div className="flex items-center gap-2">
-                  <span className="rounded-full bg-brand/20 px-2.5 py-1 text-xs font-medium text-brand-deep">
+                  <span className="rounded-full bg-brand/20 px-2.5 py-1 text-xs font-medium text-brand">
                     Belleza
                   </span>
                   <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700">
@@ -89,7 +89,7 @@ export function Hero() {
                   <span className="text-sm font-medium text-taupe">
                     Lumina Skin
                   </span>
-                  <span className="ml-auto text-sm font-semibold text-brand-deep">
+                  <span className="ml-auto text-sm font-semibold text-brand">
                     $350
                   </span>
                 </div>
@@ -104,20 +104,20 @@ export function Hero() {
                     <BadgeCheckIcon
                       width={16}
                       height={16}
-                      className="text-brand"
+                      className="text-gold"
                     />
                   </p>
                   <p className="truncate text-sm text-taupe">
                     @valen.rios · Skincare &amp; belleza
                   </p>
                 </div>
-                <span className="ml-auto shrink-0 rounded-lg bg-brand/20 px-2.5 py-1.5 text-xs font-semibold text-brand-deep">
+                <span className="ml-auto shrink-0 rounded-lg bg-gold/20 px-2.5 py-1.5 text-xs font-semibold text-gold">
                   128K
                 </span>
               </div>
 
               {/* Payment card — the ink stage */}
-              <div className="rounded-2xl bg-ink p-5 text-white shadow-lg shadow-ink/30">
+              <div className="rounded-2xl bg-brand p-5 text-white shadow-lg shadow-brand/30">
                 <div className="flex items-center justify-between">
                   <p className="text-xs uppercase tracking-widest text-paper/60">
                     Pago protegido

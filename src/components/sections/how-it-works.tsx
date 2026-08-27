@@ -53,7 +53,7 @@ export function HowItWorks() {
             <span className="flex size-11 items-center justify-center rounded-xl bg-brand/10 text-brand">
               <step.icon width={22} height={22} />
             </span>
-            <span className="mt-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-brand-deep">
+            <span className="mt-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-brand">
               Paso {index + 1}
             </span>
             <h3 className="mt-1.5 font-semibold tracking-tight text-ink">

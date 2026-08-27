@@ -5,7 +5,7 @@ import { ArrowRightIcon } from "@/components/ui/icons";
 export function DualCta() {
   return (
     <Section id="cta" className="bg-white">
-      <div className="rounded-3xl bg-ink px-6 py-14 text-center sm:px-12 sm:py-20 shadow-xl shadow-ink/25">
+      <div className="rounded-3xl bg-brand px-6 py-14 text-center sm:px-12 sm:py-20 shadow-xl shadow-brand/25">
         <p className="text-sm font-semibold uppercase tracking-widest text-paper">
           Sumate a GaiaUGC
         </p>
@@ -34,7 +34,7 @@ export function DualCta() {
             </ButtonLink>
           </div>
 
-          <div className="rounded-2xl border border-brand/40 bg-brand/10 p-6 text-left">
+          <div className="rounded-2xl border border-gold/40 bg-gold/10 p-6 text-left">
             <h3 className="text-lg font-semibold text-white">
               ¿Sos creador/a?
             </h3>

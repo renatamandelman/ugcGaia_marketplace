@@ -90,7 +90,7 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
           </div>
         </dl>
 
-        <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-brand-deep transition-colors group-hover:text-brand">
+        <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-brand transition-colors group-hover:text-brand">
           Ver brief
           <ArrowRightIcon
             width={16}

@@ -6,7 +6,6 @@ const palette = [
   "bg-brand-deep",
   "bg-clay",
   "bg-taupe",
-  "bg-brand-hover",
 ];
 
 function initialsOf(name: string): string {
