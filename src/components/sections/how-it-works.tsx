@@ -48,18 +48,18 @@ export function HowItWorks() {
         {steps.map((step, index) => (
           <li
             key={step.title}
-            className="relative flex flex-col rounded-2xl border border-marfil/70 bg-white p-5 transition-colors hover:border-oro/70 hover:bg-oro/5"
+            className="relative flex flex-col rounded-2xl border border-bone/70 bg-white p-5 transition-colors hover:border-brand/70 hover:bg-brand/5"
           >
-            <span className="flex size-11 items-center justify-center rounded-xl bg-brasa/10 text-brasa">
+            <span className="flex size-11 items-center justify-center rounded-xl bg-brand/10 text-brand">
               <step.icon width={22} height={22} />
             </span>
-            <span className="mt-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-cobre">
+            <span className="mt-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-brand-deep">
               Paso {index + 1}
             </span>
-            <h3 className="mt-1.5 font-semibold tracking-tight text-carbon">
+            <h3 className="mt-1.5 font-semibold tracking-tight text-ink">
               {step.title}
             </h3>
-            <p className="mt-2 text-sm leading-6 text-zinc-600">
+            <p className="mt-2 text-sm leading-6 text-taupe">
               {step.description}
             </p>
           </li>

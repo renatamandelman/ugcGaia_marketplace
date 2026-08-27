@@ -8,26 +8,26 @@ import type { Creator } from "@/lib/types";
 
 function CreatorCard({ creator }: { creator: Creator }) {
   return (
-    <article className="flex h-full flex-col rounded-2xl border border-marfil/70 bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-oro/80 hover:shadow-lg hover:shadow-oro/15">
+    <article className="flex h-full flex-col rounded-2xl border border-bone/70 bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-brand/80 hover:shadow-lg hover:shadow-brand/15">
       <div className="flex items-center gap-3">
         <Avatar name={creator.name} size="lg" />
         <div className="min-w-0">
-          <p className="flex items-center gap-1.5 font-semibold tracking-tight text-carbon">
+          <p className="flex items-center gap-1.5 font-semibold tracking-tight text-ink">
             <span className="truncate">{creator.name}</span>
             {creator.verified && (
-              <BadgeCheckIcon width={16} height={16} className="shrink-0 text-brasa" />
+              <BadgeCheckIcon width={16} height={16} className="shrink-0 text-brand" />
             )}
           </p>
-          <p className="truncate text-sm text-zinc-500">
+          <p className="truncate text-sm text-taupe">
             {creator.handle} · {creator.city}
           </p>
         </div>
-        <span className="ml-auto shrink-0 rounded-lg bg-oro/20 px-2.5 py-1 text-xs font-semibold text-cobre">
+        <span className="ml-auto shrink-0 rounded-lg bg-brand/20 px-2.5 py-1 text-xs font-semibold text-brand-deep">
           {formatFollowers(creator.followers)}
         </span>
       </div>
 
-      <p className="mt-4 line-clamp-2 text-sm leading-6 text-zinc-600">
+      <p className="mt-4 line-clamp-2 text-sm leading-6 text-taupe">
         {creator.bio}
       </p>
 
@@ -35,30 +35,30 @@ function CreatorCard({ creator }: { creator: Creator }) {
         {creator.tags.map((tag) => (
           <span
             key={tag}
-            className="rounded-full bg-oro/20 px-2.5 py-1 text-xs font-medium text-cobre"
+            className="rounded-full bg-brand/20 px-2.5 py-1 text-xs font-medium text-brand-deep"
           >
             {tag}
           </span>
         ))}
       </div>
 
-      <dl className="mt-5 grid grid-cols-3 gap-3 border-t border-oro/20 pt-4">
+      <dl className="mt-5 grid grid-cols-3 gap-3 border-t border-brand/20 pt-4">
         <div>
-          <dt className="text-xs text-zinc-500">Rating</dt>
-          <dd className="mt-0.5 flex items-center gap-1 text-sm font-semibold text-carbon">
-            <StarIcon width={14} height={14} className="text-oro" />
+          <dt className="text-xs text-taupe">Rating</dt>
+          <dd className="mt-0.5 flex items-center gap-1 text-sm font-semibold text-ink">
+            <StarIcon width={14} height={14} className="text-brand" />
             {creator.rating.toFixed(1)}
           </dd>
         </div>
         <div>
-          <dt className="text-xs text-zinc-500">Colaboraciones</dt>
-          <dd className="mt-0.5 text-sm font-semibold text-carbon">
+          <dt className="text-xs text-taupe">Colaboraciones</dt>
+          <dd className="mt-0.5 text-sm font-semibold text-ink">
             {creator.completedDeals}
           </dd>
         </div>
         <div>
-          <dt className="text-xs text-zinc-500">Tarifa / video</dt>
-          <dd className="mt-0.5 text-sm font-semibold text-brasa">
+          <dt className="text-xs text-taupe">Tarifa / video</dt>
+          <dd className="mt-0.5 text-sm font-semibold text-brand">
             {formatBudget(creator.ratePerVideo)}
           </dd>
         </div>

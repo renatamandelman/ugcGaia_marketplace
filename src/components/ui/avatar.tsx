@@ -1,12 +1,12 @@
 import { cn } from "./utils";
 
 const palette = [
-  "bg-bosque",
-  "bg-cobre",
-  "bg-ambar",
-  "bg-pino",
-  "bg-oro",
-  "bg-carbon-calido",
+  "bg-ink",
+  "bg-brand",
+  "bg-brand-deep",
+  "bg-clay",
+  "bg-taupe",
+  "bg-brand-hover",
 ];
 
 function initialsOf(name: string): string {

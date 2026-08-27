@@ -17,7 +17,7 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-marfil/60 bg-crema/85 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-bone/60 bg-paper/85 backdrop-blur-md">
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-5 sm:px-8">
         <Logo />
 
@@ -27,7 +27,7 @@ export function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className="rounded-lg px-3 py-2 text-sm font-medium text-zinc-600 transition-colors hover:bg-crema hover:text-cobre"
+              className="rounded-lg px-3 py-2 text-sm font-medium text-taupe transition-colors hover:bg-paper hover:text-brand-deep"
             >
               {link.label}
             </Link>
@@ -46,7 +46,7 @@ export function Navbar() {
         {/* Mobile toggle */}
         <button
           type="button"
-          className="flex size-10 items-center justify-center rounded-lg text-zinc-700 hover:bg-crema md:hidden"
+          className="flex size-10 items-center justify-center rounded-lg text-taupe hover:bg-paper md:hidden"
           onClick={() => setOpen((value) => !value)}
           aria-label={open ? "Cerrar menú" : "Abrir menú"}
           aria-expanded={open}
@@ -58,7 +58,7 @@ export function Navbar() {
       {/* Mobile menu */}
       <div
         className={cn(
-          "overflow-hidden border-t border-marfil/60 bg-crema transition-all duration-200 md:hidden",
+          "overflow-hidden border-t border-bone/60 bg-paper transition-all duration-200 md:hidden",
           open ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
         )}
       >
@@ -68,12 +68,12 @@ export function Navbar() {
               key={link.href}
               href={link.href}
               onClick={() => setOpen(false)}
-              className="rounded-lg px-3 py-2.5 text-sm font-medium text-zinc-700 hover:bg-white"
+              className="rounded-lg px-3 py-2.5 text-sm font-medium text-taupe hover:bg-white"
             >
               {link.label}
             </Link>
           ))}
-          <div className="mt-3 flex flex-col gap-2 border-t border-marfil/50 pt-4">
+          <div className="mt-3 flex flex-col gap-2 border-t border-bone/50 pt-4">
             <ButtonLink href="/#cta" variant="secondary" size="sm">
               Soy marca
             </ButtonLink>

@@ -35,14 +35,14 @@ export function SectionHeading({
         align === "center" && "mx-auto text-center"
       )}
     >
-      <p className="text-sm font-semibold uppercase tracking-widest text-cobre">
+      <p className="text-sm font-semibold uppercase tracking-widest text-brand-deep">
         {eyebrow}
       </p>
-      <h2 className="mt-3 text-3xl font-semibold tracking-tight text-balance text-carbon sm:text-4xl">
+      <h2 className="mt-3 text-3xl font-semibold tracking-tight text-balance text-ink sm:text-4xl">
         {title}
       </h2>
       {description ? (
-        <p className="mt-4 text-base leading-7 text-zinc-600 sm:text-lg">
+        <p className="mt-4 text-base leading-7 text-taupe sm:text-lg">
           {description}
         </p>
       ) : null}

@@ -45,7 +45,7 @@ export default async function CampaignDetailPage({
     <div className="mx-auto w-full max-w-6xl px-5 py-10 sm:px-8 sm:py-14">
       <Link
         href="/campaigns"
-        className="inline-flex items-center gap-2 text-sm font-medium text-cobre transition-colors hover:text-brasa"
+        className="inline-flex items-center gap-2 text-sm font-medium text-brand-deep transition-colors hover:text-brand"
       >
         <ArrowLeftIcon width={16} height={16} />
         Volver a campañas
@@ -66,10 +66,10 @@ export default async function CampaignDetailPage({
           <div className="mt-4 flex items-center gap-2.5">
             <Avatar name={campaign.brand} size="md" />
             <div>
-              <p className="text-sm font-semibold text-carbon">
+              <p className="text-sm font-semibold text-ink">
                 {campaign.brand}
               </p>
-              <p className="text-xs text-zinc-500">
+              <p className="text-xs text-taupe">
                 Marca verificada · {campaign.category}
               </p>
             </div>
@@ -77,25 +77,25 @@ export default async function CampaignDetailPage({
 
           <div className="mt-8 space-y-8">
             <div>
-              <h2 className="text-lg font-semibold tracking-tight text-carbon">
+              <h2 className="text-lg font-semibold tracking-tight text-ink">
                 El brief
               </h2>
-              <p className="mt-3 text-base leading-8 text-zinc-600">
+              <p className="mt-3 text-base leading-8 text-taupe">
                 {campaign.brief}
               </p>
             </div>
 
             <div>
-              <h2 className="text-lg font-semibold tracking-tight text-carbon">
+              <h2 className="text-lg font-semibold tracking-tight text-ink">
                 Qué pedimos
               </h2>
               <ul className="mt-4 space-y-3">
                 {campaign.requirements.map((requirement) => (
                   <li key={requirement} className="flex items-start gap-3">
-                    <span className="mt-1 flex size-5 shrink-0 items-center justify-center rounded-full bg-oro/20 text-cobre">
+                    <span className="mt-1 flex size-5 shrink-0 items-center justify-center rounded-full bg-brand/20 text-brand-deep">
                       <CheckIcon width={12} height={12} />
                     </span>
-                    <span className="text-sm leading-6 text-zinc-700">
+                    <span className="text-sm leading-6 text-taupe">
                       {requirement}
                     </span>
                   </li>
@@ -104,16 +104,16 @@ export default async function CampaignDetailPage({
             </div>
 
             <div>
-              <h2 className="text-lg font-semibold tracking-tight text-carbon">
+              <h2 className="text-lg font-semibold tracking-tight text-ink">
                 Entregables
               </h2>
               <ul className="mt-4 space-y-3">
                 {campaign.deliverables.map((deliverable) => (
                   <li key={deliverable} className="flex items-start gap-3">
-                    <span className="mt-1 flex size-5 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-zinc-500">
+                    <span className="mt-1 flex size-5 shrink-0 items-center justify-center rounded-full bg-paper-deep text-taupe">
                       <CheckIcon width={12} height={12} />
                     </span>
-                    <span className="text-sm leading-6 text-zinc-700">
+                    <span className="text-sm leading-6 text-taupe">
                       {deliverable}
                     </span>
                   </li>
@@ -125,41 +125,41 @@ export default async function CampaignDetailPage({
 
         {/* Sticky sidebar */}
         <aside className="lg:sticky lg:top-24 lg:self-start">
-          <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
+          <div className="rounded-2xl border border-bone bg-white p-6 shadow-sm">
             <dl className="space-y-5">
               <div className="flex items-center justify-between">
-                <dt className="flex items-center gap-2 text-sm text-zinc-500">
+                <dt className="flex items-center gap-2 text-sm text-taupe">
                   <DollarIcon width={16} height={16} />
                   Presupuesto por creador
                 </dt>
-                <dd className="text-xl font-semibold text-carbon">
+                <dd className="text-xl font-semibold text-ink">
                   {formatBudget(campaign.budget)}
                 </dd>
               </div>
               <div className="flex items-center justify-between">
-                <dt className="flex items-center gap-2 text-sm text-zinc-500">
+                <dt className="flex items-center gap-2 text-sm text-taupe">
                   <ClockIcon width={16} height={16} />
                   Deadline
                 </dt>
-                <dd className="text-sm font-medium text-carbon">
+                <dd className="text-sm font-medium text-ink">
                   {deadlineLabel(campaign.deadline)}
                 </dd>
               </div>
               <div className="flex items-center justify-between">
-                <dt className="flex items-center gap-2 text-sm text-zinc-500">
+                <dt className="flex items-center gap-2 text-sm text-taupe">
                   <UsersIcon width={16} height={16} />
                   Vacantes
                 </dt>
-                <dd className="text-sm font-medium text-carbon">
+                <dd className="text-sm font-medium text-ink">
                   {campaign.slots} creador{campaign.slots > 1 ? "es" : ""}
                 </dd>
               </div>
               <div className="flex items-center justify-between">
-                <dt className="flex items-center gap-2 text-sm text-zinc-500">
+                <dt className="flex items-center gap-2 text-sm text-taupe">
                   <VideoIcon width={16} height={16} />
                   Aplicaciones
                 </dt>
-                <dd className="text-sm font-medium text-carbon">
+                <dd className="text-sm font-medium text-ink">
                   {campaign.applications}
                 </dd>
               </div>
@@ -167,12 +167,12 @@ export default async function CampaignDetailPage({
 
             <div
               className={cn(
-                "mt-6 border-t border-zinc-100 pt-6",
+                "mt-6 border-t border-bone pt-6",
                 closed && "opacity-50"
               )}
             >
               <ApplyButton campaignTitle={campaign.title} />
-              <p className="mt-3 text-center text-xs leading-5 text-zinc-400">
+              <p className="mt-3 text-center text-xs leading-5 text-paper/70">
                 Demo del MVP: la propuesta no se persiste todavía.
               </p>
             </div>

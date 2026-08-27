@@ -3,23 +3,23 @@ import { cn } from "./utils";
 
 interface LogoProps {
   className?: string;
-  /** tone="light" for dark surfaces (bosque backgrounds) */
+  /** tone="light" for dark (ink) surfaces */
   tone?: "dark" | "light";
 }
 
 /**
- * GaiaUGC brand mark: bosque (forest green) square + champán spark + wordmark.
- * dark tone: Gaia in carbon + UGC in ámbar (for light surfaces).
- * light tone: Gaia in crema + UGC in champán (for dark surfaces).
+ * GaiaUGC brand mark: brand (vivid orange) square + ink spark + wordmark.
+ * dark tone: Gaia in ink + UGC in brand (for light surfaces).
+ * light tone: Gaia in paper + UGC in brand (for dark surfaces).
  */
 export function Logo({ className, tone = "dark" }: LogoProps) {
-  const wordmark = tone === "dark" ? "text-carbon" : "text-crema";
-  const ugc = tone === "dark" ? "text-ambar" : "text-champan";
+  const wordmark = tone === "dark" ? "text-ink" : "text-paper";
+  const ugc = "text-brand";
 
   return (
     <Link href="/" className={cn("flex items-center gap-2.5", className)}>
       <span
-        className="flex size-9 items-center justify-center rounded-xl bg-bosque shadow-sm shadow-bosque/30"
+        className="flex size-9 items-center justify-center rounded-xl bg-brand shadow-sm shadow-brand/30"
         aria-hidden
       >
         <svg
@@ -27,7 +27,7 @@ export function Logo({ className, tone = "dark" }: LogoProps) {
           height="20"
           viewBox="0 0 24 24"
           fill="none"
-          stroke="#F2C778"
+          stroke="#1A1A1A"
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"

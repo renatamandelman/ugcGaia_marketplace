@@ -42,12 +42,12 @@ export function TrustStats() {
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="rounded-2xl border border-marfil/70 bg-white p-6 text-center shadow-sm"
+            className="rounded-2xl border border-bone/70 bg-white p-6 text-center shadow-sm"
           >
-            <dd className="text-3xl font-semibold tracking-tight text-ambar sm:text-4xl">
+            <dd className="text-3xl font-semibold tracking-tight text-brand sm:text-4xl">
               {stat.value}
             </dd>
-            <dt className="mt-2 text-sm leading-5 text-zinc-600">
+            <dt className="mt-2 text-sm leading-5 text-taupe">
               {stat.label}
             </dt>
           </div>
@@ -58,15 +58,15 @@ export function TrustStats() {
         {trustFeatures.map((feature) => (
           <div
             key={feature.title}
-            className="rounded-2xl border border-marfil/70 bg-white p-6"
+            className="rounded-2xl border border-bone/70 bg-white p-6"
           >
-            <span className="flex size-11 items-center justify-center rounded-xl bg-brasa/10 text-brasa">
+            <span className="flex size-11 items-center justify-center rounded-xl bg-brand/10 text-brand">
               <feature.icon width={22} height={22} />
             </span>
-            <h3 className="mt-4 font-semibold tracking-tight text-carbon">
+            <h3 className="mt-4 font-semibold tracking-tight text-ink">
               {feature.title}
             </h3>
-            <p className="mt-2 text-sm leading-6 text-zinc-600">
+            <p className="mt-2 text-sm leading-6 text-taupe">
               {feature.description}
             </p>
           </div>

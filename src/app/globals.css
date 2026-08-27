@@ -1,28 +1,24 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f7f4ee; /* crema */
-  --foreground: #0a0a0a; /* carbon */
+  --background: #f7f3ee; /* paper (marfil) */
+  --foreground: #1a1a1a; /* ink */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  /* Gaia brand palette — story: raíces (verde), valor (dorado), acción (brasa) */
-  --color-bosque: #022720; /* primary action + dark surfaces */
-  --color-pino: #044036; /* hover of primary, borders on dark */
-  --color-brasa: #f26b1f; /* vivid accent: links, active states, focus */
-  --color-brasa-fuego: #d95a12; /* hover of accent */
-  --color-oro: #c9a84c; /* premium highlights, ratings */
-  --color-champan: #f2c778; /* stars, fine warm lines, light gold */
-  --color-ambar: #be6b03; /* large display values on light */
-  --color-cobre: #582b02; /* readable text accents on light */
-  --color-crema: #f7f4ee; /* base background */
-  --color-crema-profunda: #f0e8d8; /* section bands, soft fills */
-  --color-marfil: #e8d5a3; /* warm borders, separators */
-  --color-carbon: #0a0a0a; /* text */
-  --color-carbon-calido: #1c1a14; /* warm near-black text */
+  /* Gaia brand palette — playful editorial: papel, tinta y naranja */
+  --color-brand: #ff4d26; /* vivid accent: primary CTA, active states, ratings */
+  --color-brand-hover: #e63e1b; /* hover of brand */
+  --color-brand-deep: #c2411a; /* readable accent text on light (4.6:1 AA) */
+  --color-ink: #1a1a1a; /* primary text + dark surfaces */
+  --color-paper: #f7f3ee; /* base background (marfil) */
+  --color-paper-deep: #efe9e1; /* section bands, soft fills, hovers */
+  --color-bone: #e8e2d9; /* borders, separators */
+  --color-taupe: #6b6154; /* secondary text (warm gray, 5.3:1 AA) */
+  --color-clay: #9a5440; /* avatar fills, secondary warm accent */
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);

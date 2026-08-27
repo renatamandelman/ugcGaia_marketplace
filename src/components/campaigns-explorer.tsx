@@ -35,8 +35,8 @@ export function CampaignsExplorer({ campaigns }: CampaignsExplorerProps) {
             className={cn(
               "rounded-full px-4 py-2 text-sm font-medium transition-colors",
               active === category
-                ? "bg-bosque text-white shadow-sm shadow-bosque/25"
-                : "bg-white text-zinc-600 ring-1 ring-inset ring-oro/45 hover:bg-oro/10"
+                ? "bg-ink text-white shadow-sm shadow-ink/25"
+                : "bg-white text-taupe ring-1 ring-inset ring-brand/45 hover:bg-brand/10"
             )}
           >
             {category}
@@ -44,7 +44,7 @@ export function CampaignsExplorer({ campaigns }: CampaignsExplorerProps) {
         ))}
       </div>
 
-      <p className="mt-6 text-center text-sm text-zinc-500">
+      <p className="mt-6 text-center text-sm text-taupe">
         {filtered.length}{" "}
         {filtered.length === 1 ? "campaña activa" : "campañas activas"}
       </p>

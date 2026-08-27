@@ -27,7 +27,7 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
   return (
     <Link
       href={`/campaigns/${campaign.id}`}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-marfil/70 bg-white transition-all hover:-translate-y-0.5 hover:border-oro/80 hover:shadow-lg hover:shadow-oro/15"
+      className="group flex flex-col overflow-hidden rounded-2xl border border-bone/70 bg-white transition-all hover:-translate-y-0.5 hover:border-brand/80 hover:shadow-lg hover:shadow-brand/15"
     >
       {/* Visual header */}
       <div
@@ -50,7 +50,7 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
 
         <div className="absolute inset-x-4 bottom-3.5 flex items-center gap-2.5">
           <Avatar name={campaign.brand} size="sm" />
-          <span className="text-sm font-semibold text-zinc-900 drop-shadow-sm">
+          <span className="text-sm font-semibold text-ink drop-shadow-sm">
             {campaign.brand}
           </span>
         </div>
@@ -58,39 +58,39 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
 
       {/* Body */}
       <div className="flex flex-1 flex-col p-5">
-        <h3 className="text-base font-semibold tracking-tight text-carbon">
+        <h3 className="text-base font-semibold tracking-tight text-ink">
           {campaign.title}
         </h3>
-        <p className="mt-2 line-clamp-2 text-sm leading-6 text-zinc-600">
+        <p className="mt-2 line-clamp-2 text-sm leading-6 text-taupe">
           {campaign.brief}
         </p>
 
-        <dl className="mt-5 grid grid-cols-3 gap-3 border-t border-oro/20 pt-4">
+        <dl className="mt-5 grid grid-cols-3 gap-3 border-t border-brand/20 pt-4">
           <div>
-            <dt className="text-xs text-zinc-500">Presupuesto</dt>
-            <dd className="mt-0.5 text-sm font-semibold text-carbon">
+            <dt className="text-xs text-taupe">Presupuesto</dt>
+            <dd className="mt-0.5 text-sm font-semibold text-ink">
               {formatBudget(campaign.budget)}
             </dd>
           </div>
           <div>
-            <dt className="flex items-center gap-1 text-xs text-zinc-500">
+            <dt className="flex items-center gap-1 text-xs text-taupe">
               <UsersIcon width={12} height={12} /> Aplicaciones
             </dt>
-            <dd className="mt-0.5 text-sm font-semibold text-carbon">
+            <dd className="mt-0.5 text-sm font-semibold text-ink">
               {campaign.applications}
             </dd>
           </div>
           <div>
-            <dt className="flex items-center gap-1 text-xs text-zinc-500">
+            <dt className="flex items-center gap-1 text-xs text-taupe">
               <ClockIcon width={12} height={12} /> Deadline
             </dt>
-            <dd className="mt-0.5 text-xs font-medium text-carbon">
+            <dd className="mt-0.5 text-xs font-medium text-ink">
               {deadlineLabel(campaign.deadline)}
             </dd>
           </div>
         </dl>
 
-        <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-cobre transition-colors group-hover:text-brasa">
+        <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-brand-deep transition-colors group-hover:text-brand">
           Ver brief
           <ArrowRightIcon
             width={16}
