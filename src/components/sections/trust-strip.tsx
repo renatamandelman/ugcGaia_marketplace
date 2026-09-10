@@ -10,7 +10,7 @@ const brands = [
 /** Decorative strip — mock brand wordmarks to seed trust during the pitch */
 export function TrustStrip() {
   return (
-    <section className="border-y border-brand/25 py-8">
+    <section className="border-y border-brand/25 py-5">
       <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
         <p className="text-center text-xs font-medium uppercase tracking-widest text-taupe">
           Marcas que ya publican campañas con micro-creadores

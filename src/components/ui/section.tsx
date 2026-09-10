@@ -16,14 +16,12 @@ export function Section({ id, className, children }: SectionProps) {
 }
 
 interface SectionHeadingProps {
-  eyebrow: string;
   title: ReactNode;
   description?: string;
   align?: "left" | "center";
 }
 
 export function SectionHeading({
-  eyebrow,
   title,
   description,
   align = "center",
@@ -35,9 +33,7 @@ export function SectionHeading({
         align === "center" && "mx-auto text-center"
       )}
     >
-      <p className="text-sm font-semibold uppercase tracking-widest text-brand-deep">
-        {eyebrow}
-      </p>
+  
       <h2 className="mt-3 text-3xl font-semibold tracking-tight text-balance text-ink sm:text-4xl">
         {title}
       </h2>

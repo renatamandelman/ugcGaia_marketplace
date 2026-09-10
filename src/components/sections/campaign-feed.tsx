@@ -1,24 +1,43 @@
 import { Section, SectionHeading } from "@/components/ui/section";
 import { ButtonLink } from "@/components/ui/button";
 import { CampaignCard } from "@/components/campaign-card";
-import { campaigns } from "@/lib/mock-data";
+import { createClient } from "@/lib/supabase/server";
+import { mapCampaignRow } from "@/lib/campaigns";
 
-export function CampaignFeed() {
-  const featured = campaigns.filter((campaign) => campaign.status !== "filled").slice(0, 3);
+export async function CampaignFeed() {
+  const supabase = await createClient();
+
+  const { data } = await supabase
+    .from("campaigns")
+    .select(
+      "id, title, description, category, budget_min, budget_max, deliverables, deadline, status, created_at, profiles(full_name)"
+    )
+    .eq("status", "open")
+    .order("created_at", { ascending: false })
+    .limit(6);
+
+  const campaigns = (data ?? []).map((row) =>
+    mapCampaignRow(row as never)
+  );
 
   return (
-    <Section>
+    <Section id="campanas">
       <SectionHeading
-        eyebrow="Para creadores"
         title="Campañas activas en este momento"
         description="Briefs reales con presupuesto, plazos y entregas definidos. Aplicá en un clic y que tu trabajo hable por vos."
       />
 
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {featured.map((campaign) => (
-          <CampaignCard key={campaign.id} campaign={campaign} />
-        ))}
-      </div>
+      {campaigns.length === 0 ? (
+        <p className="text-center text-sm text-taupe">
+          Todavía no hay campañas activas. Si sos marca, publicá la primera.
+        </p>
+      ) : (
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {campaigns.map((campaign) => (
+            <CampaignCard key={campaign.id} campaign={campaign} />
+          ))}
+        </div>
+      )}
 
       <div className="mt-10 text-center">
         <ButtonLink href="/campaigns" variant="primary" size="lg">

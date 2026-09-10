@@ -6,15 +6,15 @@ const columns = [
     title: "Plataforma",
     links: [
       { label: "Cómo funciona", href: "/#como-funciona" },
-      { label: "Campañas activas", href: "/campaigns" },
-      { label: "Creadores", href: "/#creadores" },
+      { label: "Campañas activas", href: "/#campanas" },
+      { label: "Creadores", href: "/#como-funciona" },
     ],
   },
   {
     title: "Marcas",
     links: [
-      { label: "Publicar un brief", href: "/#cta" },
-      { label: "Precios", href: "/#cta" },
+      { label: "Publicar un brief", href: "/#como-funciona" },
+      { label: "Precios", href: "/#como-funciona" },
       { label: "Casos de éxito", href: "/#confianza" },
     ],
   },

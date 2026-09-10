@@ -1,17 +1,28 @@
 import { cn } from "./utils";
-import type { CampaignStatus } from "@/lib/types";
-import { statusLabel } from "@/lib/format";
 
-export function StatusBadge({ status }: { status: CampaignStatus }) {
-  const styles: Record<CampaignStatus, string> = {
-    active: "bg-emerald-50 text-emerald-700 ring-emerald-600/20",
-    closing: "bg-amber-50 text-amber-700 ring-amber-600/20",
+export type BadgeStatus = "open" | "filled" | "closed";
+
+export function campaignStatusLabel(status: BadgeStatus): string {
+  switch (status) {
+    case "open":
+      return "Abierta";
+    case "filled":
+      return "Completa";
+    case "closed":
+      return "Cerrada";
+  }
+}
+
+export function StatusBadge({ status }: { status: BadgeStatus }) {
+  const styles: Record<BadgeStatus, string> = {
+    open: "bg-emerald-50 text-emerald-700 ring-emerald-600/20",
     filled: "bg-paper-deep text-taupe ring-zinc-500/20",
+    closed: "bg-red-50 text-red-700 ring-red-600/20",
   };
-  const dot: Record<CampaignStatus, string> = {
-    active: "bg-emerald-500",
-    closing: "bg-amber-500",
+  const dot: Record<BadgeStatus, string> = {
+    open: "bg-emerald-500",
     filled: "bg-zinc-400",
+    closed: "bg-red-500",
   };
   return (
     <span
@@ -21,7 +32,7 @@ export function StatusBadge({ status }: { status: CampaignStatus }) {
       )}
     >
       <span className={cn("size-1.5 rounded-full", dot[status])} />
-      {statusLabel(status)}
+      {campaignStatusLabel(status)}
     </span>
   );
 }

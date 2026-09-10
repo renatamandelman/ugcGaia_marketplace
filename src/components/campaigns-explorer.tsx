@@ -1,12 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { Campaign } from "@/lib/types";
+import type { CampaignFeedItem } from "@/lib/campaigns";
 import { CampaignCard } from "@/components/campaign-card";
 import { cn } from "@/components/ui/utils";
 
 interface CampaignsExplorerProps {
-  campaigns: Campaign[];
+  campaigns: CampaignFeedItem[];
 }
 
 export function CampaignsExplorer({ campaigns }: CampaignsExplorerProps) {

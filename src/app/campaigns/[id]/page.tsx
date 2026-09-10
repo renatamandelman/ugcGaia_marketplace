@@ -1,45 +1,70 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { campaigns } from "@/lib/mock-data";
-import { deadlineLabel, formatBudget } from "@/lib/format";
+import { createClient } from "@/lib/supabase/server";
+import { formatBudgetRange, deadlineLabel } from "@/lib/format";
 import { Avatar } from "@/components/ui/avatar";
 import { StatusBadge, CategoryBadge } from "@/components/ui/badge";
 import { ApplyButton } from "@/components/apply-button";
 import {
   ArrowLeftIcon,
-  CheckIcon,
   ClockIcon,
   DollarIcon,
-  UsersIcon,
   VideoIcon,
+  CheckIcon,
 } from "@/components/ui/icons";
 import { cn } from "@/components/ui/utils";
 
-export function generateStaticParams() {
-  return campaigns.map((campaign) => ({ id: campaign.id }));
+interface CampaignDetailPageProps {
+  params: Promise<{ id: string }>;
 }
 
-export async function generateMetadata({
-  params,
-}: PageProps<"/campaigns/[id]">): Promise<Metadata> {
-  const { id } = await params;
-  const campaign = campaigns.find((item) => item.id === id);
-  if (!campaign) return { title: "Campaña no encontrada" };
-  return {
-    title: campaign.title,
-    description: campaign.brief,
-  };
+export async function generateMetadata(): Promise<Metadata> {
+  return { title: "Detalle de campaña" };
 }
 
 export default async function CampaignDetailPage({
   params,
-}: PageProps<"/campaigns/[id]">) {
+}: CampaignDetailPageProps) {
   const { id } = await params;
-  const campaign = campaigns.find((item) => item.id === id);
-  if (!campaign) notFound();
+  const supabase = await createClient();
 
-  const closed = campaign.status === "filled";
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { data: row } = await supabase
+    .from("campaigns")
+    .select(
+      "id, title, description, category, budget_min, budget_max, deliverables, deadline, status, created_at, profiles(full_name)"
+    )
+    .eq("id", id)
+    .single();
+
+  if (!row) notFound();
+
+  type BrandRelation =
+  | { full_name: string | null }
+  | { full_name: string | null }[]
+  | null;
+
+function brandName(relation: BrandRelation): string {
+  const entry = Array.isArray(relation) ? relation[0] : relation;
+  return entry?.full_name ?? "Marca";
+}
+
+const campaign = {
+    ...row,
+    brand: brandName(row.profiles as BrandRelation),
+  };
+  const closed = campaign.status !== "open";
+
+  const deliverables: string[] = campaign.deliverables
+    ? campaign.deliverables
+        .split("\n")
+        .map((d: string) => d.trim())
+        .filter((d: string) => d !== "")
+    : [];
 
   return (
     <div className="mx-auto w-full max-w-6xl px-5 py-10 sm:px-8 sm:py-14">
@@ -81,45 +106,29 @@ export default async function CampaignDetailPage({
                 El brief
               </h2>
               <p className="mt-3 text-base leading-8 text-taupe">
-                {campaign.brief}
+                {campaign.description}
               </p>
             </div>
 
-            <div>
-              <h2 className="text-lg font-semibold tracking-tight text-ink">
-                Qué pedimos
-              </h2>
-              <ul className="mt-4 space-y-3">
-                {campaign.requirements.map((requirement) => (
-                  <li key={requirement} className="flex items-start gap-3">
-                    <span className="mt-1 flex size-5 shrink-0 items-center justify-center rounded-full bg-brand/20 text-brand">
-                      <CheckIcon width={12} height={12} />
-                    </span>
-                    <span className="text-sm leading-6 text-taupe">
-                      {requirement}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h2 className="text-lg font-semibold tracking-tight text-ink">
-                Entregables
-              </h2>
-              <ul className="mt-4 space-y-3">
-                {campaign.deliverables.map((deliverable) => (
-                  <li key={deliverable} className="flex items-start gap-3">
-                    <span className="mt-1 flex size-5 shrink-0 items-center justify-center rounded-full bg-paper-deep text-taupe">
-                      <CheckIcon width={12} height={12} />
-                    </span>
-                    <span className="text-sm leading-6 text-taupe">
-                      {deliverable}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {deliverables.length > 0 ? (
+              <div>
+                <h2 className="text-lg font-semibold tracking-tight text-ink">
+                  Entregables
+                </h2>
+                <ul className="mt-4 space-y-3">
+                  {deliverables.map((deliverable) => (
+                    <li key={deliverable} className="flex items-start gap-3">
+                      <span className="mt-1 flex size-5 shrink-0 items-center justify-center rounded-full bg-paper-deep text-taupe">
+                        <CheckIcon width={12} height={12} />
+                      </span>
+                      <span className="text-sm leading-6 text-taupe">
+                        {deliverable}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
           </div>
         </div>
 
@@ -133,7 +142,10 @@ export default async function CampaignDetailPage({
                   Presupuesto por creador
                 </dt>
                 <dd className="text-xl font-semibold text-ink">
-                  {formatBudget(campaign.budget)}
+                  {formatBudgetRange(
+                    campaign.budget_min,
+                    campaign.budget_max
+                  )}
                 </dd>
               </div>
               <div className="flex items-center justify-between">
@@ -142,38 +154,37 @@ export default async function CampaignDetailPage({
                   Deadline
                 </dt>
                 <dd className="text-sm font-medium text-ink">
-                  {deadlineLabel(campaign.deadline)}
-                </dd>
-              </div>
-              <div className="flex items-center justify-between">
-                <dt className="flex items-center gap-2 text-sm text-taupe">
-                  <UsersIcon width={16} height={16} />
-                  Vacantes
-                </dt>
-                <dd className="text-sm font-medium text-ink">
-                  {campaign.slots} creador{campaign.slots > 1 ? "es" : ""}
+                  {campaign.deadline
+                    ? deadlineLabel(campaign.deadline)
+                    : "Sin fecha límite"}
                 </dd>
               </div>
               <div className="flex items-center justify-between">
                 <dt className="flex items-center gap-2 text-sm text-taupe">
                   <VideoIcon width={16} height={16} />
-                  Aplicaciones
+                  Publicada
                 </dt>
                 <dd className="text-sm font-medium text-ink">
-                  {campaign.applications}
+                  {new Date(campaign.created_at).toLocaleDateString("es-AR", {
+                    day: "numeric",
+                    month: "short",
+                  })}
                 </dd>
               </div>
             </dl>
 
-            <div
-              className={cn(
-                "mt-6 border-t border-bone pt-6",
-                closed && "opacity-50"
-              )}
-            >
-              <ApplyButton campaignTitle={campaign.title} />
-              <p className="mt-3 text-center text-xs leading-5 text-paper/70">
-                Demo del MVP: la propuesta no se persiste todavía.
+            <div className="mt-6 border-t border-bone pt-6">
+              <div className={cn(closed && "opacity-50")}>
+                <ApplyButton
+                  campaignId={campaign.id}
+                  campaignTitle={campaign.title}
+                  isAuthenticated={Boolean(user)}
+                />
+              </div>
+              <p className="mt-3 text-center text-xs leading-5 text-taupe">
+                {closed
+                  ? "Esta campaña ya no acepta aplicaciones."
+                  : "¿No tenés cuenta? Registrate como creador para aplicar."}
               </p>
             </div>
           </div>

@@ -2,10 +2,8 @@ import { Section, SectionHeading } from "@/components/ui/section";
 import { ShieldIcon, FileTextIcon, VideoIcon } from "@/components/ui/icons";
 
 const stats = [
-  { value: "12.4K", label: "creadores activos en la plataforma" },
+  { value: "12.4K", label: "creadores activos" },
   { value: "860+", label: "PyMEs publicando briefs" },
-  { value: "98%", label: "de entregas aprobadas a la primera" },
-  { value: "$3.2M", label: "pagados a creadores desde 2025" },
 ];
 
 const trustFeatures = [
@@ -13,62 +11,58 @@ const trustFeatures = [
     icon: ShieldIcon,
     title: "Pago protegido",
     description:
-      "El dinero queda en custodia y se libera recién cuando aprobás el deliverable. Cero riesgo para las dos partes.",
+      "El dinero queda en custodia y se libera recién cuando aprobás el deliverable.",
   },
   {
     icon: FileTextIcon,
     title: "Contrato automático",
     description:
-      "Cada colaboración genera un contrato con licencia de uso, plazos y exclusividad. Legal claro, sin letra chica.",
+      "Cada colaboración genera un contrato con licencia de uso, plazos y exclusividad.",
   },
   {
     icon: VideoIcon,
     title: "Métricas reales",
     description:
-      "Alcance, engagement y vistas verificadas post-publicación. Sabés exactamente qué compró tu presupuesto.",
+      "Alcance, engagement y vistas verificadas post-publicación.",
   },
 ];
 
 export function TrustStats() {
   return (
-    <Section id="confianza">
+    <Section id="confianza" className="py-12 sm:py-16">
       <SectionHeading
-        eyebrow="Transparencia"
         title="La confianza no se promete, se construye"
         description="Automatizamos lo que otros marketplaces dejan a la buena voluntad."
       />
 
-      <dl className="grid grid-cols-2 gap-6 lg:grid-cols-4">
+      <dl className="mt-8 flex flex-wrap items-center justify-center gap-x-10 gap-y-3">
         {stats.map((stat) => (
-          <div
-            key={stat.label}
-            className="rounded-2xl border border-bone/70 bg-white p-6 text-center shadow-sm"
-          >
-            <dd className="text-3xl font-semibold tracking-tight text-brand sm:text-4xl">
+          <div key={stat.label} className="text-center">
+            <dd className="text-2xl font-semibold tracking-tight text-brand sm:text-3xl">
               {stat.value}
             </dd>
-            <dt className="mt-2 text-sm leading-5 text-taupe">
-              {stat.label}
-            </dt>
+            <dt className="mt-0.5 text-xs text-taupe">{stat.label}</dt>
           </div>
         ))}
       </dl>
 
-      <div className="mt-6 grid gap-5 sm:grid-cols-3">
+      <div className="mt-8 grid gap-4 sm:grid-cols-3">
         {trustFeatures.map((feature) => (
           <div
             key={feature.title}
-            className="rounded-2xl border border-bone/70 bg-white p-6"
+            className="flex items-start gap-3 rounded-xl bg-paper-deep px-4 py-3"
           >
-            <span className="flex size-11 items-center justify-center rounded-xl bg-brand/10 text-brand">
-              <feature.icon width={22} height={22} />
+            <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand/10 text-brand">
+              <feature.icon width={16} height={16} />
             </span>
-            <h3 className="mt-4 font-semibold tracking-tight text-ink">
-              {feature.title}
-            </h3>
-            <p className="mt-2 text-sm leading-6 text-taupe">
-              {feature.description}
-            </p>
+            <div>
+              <h3 className="text-sm font-semibold text-ink">
+                {feature.title}
+              </h3>
+              <p className="mt-0.5 text-xs leading-5 text-taupe">
+                {feature.description}
+              </p>
+            </div>
           </div>
         ))}
       </div>

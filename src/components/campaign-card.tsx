@@ -1,26 +1,32 @@
 import Link from "next/link";
-import type { Campaign } from "@/lib/types";
-import { deadlineLabel, formatBudget } from "@/lib/format";
+import type { CampaignFeedItem } from "@/lib/campaigns";
+import { formatBudgetRange } from "@/lib/format";
 import { Avatar } from "@/components/ui/avatar";
 import { StatusBadge, CategoryBadge } from "@/components/ui/badge";
-import { ArrowRightIcon, UsersIcon, ClockIcon } from "@/components/ui/icons";
+import { ArrowRightIcon, ClockIcon } from "@/components/ui/icons";
 import { cn } from "@/components/ui/utils";
 
 const categoryGradients: Record<string, string> = {
-  Belleza: "from-rose-200 via-orange-100 to-amber-100",
-  Gastronomía: "from-amber-200 via-orange-100 to-lime-100",
-  Moda: "from-violet-200 via-fuchsia-100 to-rose-100",
-  Tecnología: "from-sky-200 via-cyan-100 to-slate-100",
+  Beauty: "from-rose-200 via-orange-100 to-amber-100",
+  Skincare: "from-emerald-200 via-teal-100 to-lime-100",
+  Fashion: "from-violet-200 via-fuchsia-100 to-rose-100",
+  Food: "from-amber-200 via-orange-100 to-lime-100",
   Fitness: "from-emerald-200 via-teal-100 to-lime-100",
+  Tech: "from-sky-200 via-cyan-100 to-slate-100",
+  Lifestyle: "from-zinc-200 via-zinc-100 to-zinc-50",
+  Travel: "from-sky-200 via-indigo-100 to-violet-100",
+  Home: "from-orange-200 via-amber-100 to-yellow-50",
+  Otro: "from-zinc-200 via-zinc-100 to-zinc-50",
 };
 
 function gradientFor(category: string): string {
-  return categoryGradients[category] ?? "from-zinc-200 via-zinc-100 to-zinc-50";
+  return (
+    categoryGradients[category] ?? "from-zinc-200 via-zinc-100 to-zinc-50"
+  );
 }
 
 interface CampaignCardProps {
-  campaign: Campaign;
-  priority?: boolean;
+  campaign: CampaignFeedItem;
 }
 
 export function CampaignCard({ campaign }: CampaignCardProps) {
@@ -45,13 +51,13 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
           className="pointer-events-none absolute -bottom-7 -right-2 select-none text-[7rem] font-bold leading-none text-white/50"
           aria-hidden
         >
-          {campaign.brand.charAt(0)}
+          {campaign.brand?.charAt(0) ?? "G"}
         </span>
 
         <div className="absolute inset-x-4 bottom-3.5 flex items-center gap-2.5">
-          <Avatar name={campaign.brand} size="sm" />
+          <Avatar name={campaign.brand ?? "Marca"} size="sm" />
           <span className="text-sm font-semibold text-ink drop-shadow-sm">
-            {campaign.brand}
+            {campaign.brand ?? "Marca"}
           </span>
         </div>
       </div>
@@ -62,22 +68,14 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
           {campaign.title}
         </h3>
         <p className="mt-2 line-clamp-2 text-sm leading-6 text-taupe">
-          {campaign.brief}
+          {campaign.description}
         </p>
 
-        <dl className="mt-5 grid grid-cols-3 gap-3 border-t border-brand/20 pt-4">
+        <dl className="mt-5 grid grid-cols-2 gap-3 border-t border-brand/20 pt-4">
           <div>
             <dt className="text-xs text-taupe">Presupuesto</dt>
             <dd className="mt-0.5 text-sm font-semibold text-ink">
-              {formatBudget(campaign.budget)}
-            </dd>
-          </div>
-          <div>
-            <dt className="flex items-center gap-1 text-xs text-taupe">
-              <UsersIcon width={12} height={12} /> Aplicaciones
-            </dt>
-            <dd className="mt-0.5 text-sm font-semibold text-ink">
-              {campaign.applications}
+              {formatBudgetRange(campaign.budget_min, campaign.budget_max)}
             </dd>
           </div>
           <div>
@@ -85,7 +83,12 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
               <ClockIcon width={12} height={12} /> Deadline
             </dt>
             <dd className="mt-0.5 text-xs font-medium text-ink">
-              {deadlineLabel(campaign.deadline)}
+              {campaign.deadline
+                ? new Date(campaign.deadline).toLocaleDateString("es-AR", {
+                    day: "numeric",
+                    month: "short",
+                  })
+                : "Sin fecha"}
             </dd>
           </div>
         </dl>

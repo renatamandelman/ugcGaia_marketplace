@@ -1,47 +1,71 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { applyToCampaign } from "@/app/campaigns/actions";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { CheckIcon } from "@/components/ui/icons";
 
 interface ApplyButtonProps {
+  campaignId: string;
   campaignTitle: string;
+  isAuthenticated: boolean;
 }
 
-type ApplyState = "idle" | "loading" | "applied";
-
-/**
- * Simulated apply flow for the MVP demo.
- * Later this becomes a Server Action that persists the proposal to Supabase.
- */
-export function ApplyButton({ campaignTitle }: ApplyButtonProps) {
-  const [state, setState] = useState<ApplyState>("idle");
+export function ApplyButton({
+  campaignId,
+  campaignTitle,
+  isAuthenticated,
+}: ApplyButtonProps) {
+  const router = useRouter();
+  const [pending, startTransition] = useTransition();
+  const [error, setError] = useState("");
+  const [applied, setApplied] = useState(false);
 
   function handleApply() {
-    if (state !== "idle") return;
-    setState("loading");
-    // Fake network round-trip so the demo feels real
-    window.setTimeout(() => setState("applied"), 900);
+    setError("");
+    startTransition(async () => {
+      const result = await applyToCampaign(campaignId);
+      if (result && "error" in result) {
+        setError(result.error ?? "");
+        return;
+      }
+      setApplied(true);
+      router.refresh();
+    });
   }
 
-  if (state === "applied") {
+  if (applied) {
     return (
       <div className="flex items-center justify-center gap-2 rounded-xl bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
         <CheckIcon width={16} height={16} />
-        Propuesta enviada a {campaignTitle}.
+        Postulación enviada a {campaignTitle}.
       </div>
     );
   }
 
+  if (!isAuthenticated) {
+    return (
+      <ButtonLink href="/login" variant="primary" size="lg" className="w-full">
+        Ingresá para aplicar
+      </ButtonLink>
+    );
+  }
+
   return (
-    <Button
-      variant="primary"
-      size="lg"
-      className="w-full"
-      onClick={handleApply}
-      disabled={state === "loading"}
-    >
-      {state === "loading" ? "Enviando propuesta..." : "Aplicar como creador"}
-    </Button>
+    <div className="flex flex-col gap-3">
+      <Button
+        variant="primary"
+        size="lg"
+        className="w-full"
+        onClick={handleApply}
+        disabled={pending}
+      >
+        {pending ? "Enviando postulación..." : "Aplicar como creador"}
+      </Button>
+      {error ? (
+        <p className="text-center text-sm font-medium text-red-600">{error}</p>
+      ) : null}
+    </div>
   );
 }

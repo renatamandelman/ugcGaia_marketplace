@@ -27,6 +27,7 @@ interface AvatarProps {
   name: string;
   size?: "sm" | "md" | "lg";
   className?: string;
+  src?: string | null;
 }
 
 const sizeClasses = {
@@ -35,7 +36,21 @@ const sizeClasses = {
   lg: "size-14 text-lg",
 };
 
-export function Avatar({ name, size = "md", className }: AvatarProps) {
+export function Avatar({ name, size = "md", className, src }: AvatarProps) {
+  if (src) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={src}
+        alt={name}
+        className={cn(
+          "inline-flex shrink-0 select-none rounded-full object-cover",
+          sizeClasses[size],
+          className
+        )}
+      />
+    );
+  }
   return (
     <span
       className={cn(

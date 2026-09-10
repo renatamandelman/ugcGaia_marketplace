@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f7f3ee; /* paper (marfil) */
+  --background: #F0FCF7; /* paper (marfil) */
   --foreground: #1a1a1a; /* ink */
 }
 
@@ -9,18 +9,23 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  /* Gaia brand palette — bosque dorado, ejecución divertida */
-  --color-brand: #022720; /* deep forest: primary CTA, dark surfaces, display values */
-  --color-brand-hover: #044036; /* pino: hover of brand surfaces */
-  --color-gold: #f2c778; /* champán: stars, glows, buttons on dark green */
-  --color-spark: #d4e33d; /* chartreuse spark: playful micro-accents, fun hovers */
-  --color-brand-deep: #5a6614; /* olive: readable accent text on light (5.5:1 AA) */
+  /* Gaia brand palette — verde bosque + menta */
+  --color-brand: #022720; /* verde oscuro: primary CTA, dark surfaces */
+  --color-brand-hover: #006b5f; /* teal: hover of brand surfaces */
+  --color-brand-mid: #006b5f; /* teal medio: gradients, acentos */
+  --color-lime: #A4CF4A; /* verde claro: badges, highlights */
+  --color-lime-bright: #c5f268; /* lime brillante: gradientes, spark */
+  --color-mint: #35C8B5; /* menta/celeste: accent */
+  --color-mint-light: #C2F2E4; /* menta claro: fondos suaves */
+  --color-cream: #EEF7BE; /* amarillito: fondos, hover */
+  --color-gold: #f2c778; /* champán: stars, glows (legacy compat) */
+  --color-brand-deep: #006b5f; /* teal: readable accent text on light */
   --color-ink: #1a1a1a; /* primary text */
-  --color-paper: #f7f4ee; /* base background (crema) */
-  --color-paper-deep: #efe9e1; /* section bands, soft fills, hovers */
-  --color-bone: #e8d5a3; /* marfil: warm borders, separators */
-  --color-taupe: #6b6154; /* secondary text (warm gray, 5.3:1 AA) */
-  --color-clay: #8c6b3c; /* bronze: avatar fills, secondary warm accent */
+  --color-paper: #f7f4ee; /* base background */
+  --color-paper-deep: #efe9e1; /* section bands, soft fills */
+  --color-bone: #e8d5a3; /* borders, separators */
+  --color-taupe: #6b6154; /* secondary text */
+  --color-clay: #8c6b3c; /* avatar fills */
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -36,4 +41,23 @@ body {
 section[id],
 div[id] {
   scroll-margin-top: 5.5rem;
+}
+
+/* Reusable input style */
+.input-field {
+  width: 100%;
+  height: 2.75rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-bone);
+  background: var(--color-white, #fff);
+  padding: 0 1rem;
+  font-size: 0.875rem;
+  color: var(--color-ink);
+  transition: all 0.15s ease;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--color-brand);
+  box-shadow: 0 0 0 2px rgb(53 200 181 / 0.2);
 }
