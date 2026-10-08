@@ -28,6 +28,7 @@ export function Navbar({ user }: NavbarProps) {
     ? [
         { label: "Panel", href: "/profile" },
         { label: "Campañas", href: "/campaigns" },
+        { label: "Creadores", href: "/creators" },
       ]
     : [
         { label: "Dashboard", href: "/dashboard" },

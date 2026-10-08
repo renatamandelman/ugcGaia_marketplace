@@ -16,7 +16,7 @@ export default async function CampaignsPage() {
   const { data } = await supabase
     .from("campaigns")
     .select(
-      "id, title, description, category, budget_min, budget_max, deliverables, deadline, status, created_at, profiles(full_name)"
+      "id, title, description, category, budget_min, budget_max, deliverables, deadline, status, tags, created_at, profiles(full_name)"
     )
     .eq("status", "open")
     .order("created_at", { ascending: false });
@@ -27,7 +27,7 @@ export default async function CampaignsPage() {
     <Section>
       <SectionHeading
         title="Campañas activas"
-        description="Filtrá por categoría y aplicá al brief que mejor se adapte a tu estilo de contenido."
+        description="Buscá por texto, filtrá por categoría y tags, y aplicá al brief que mejor se adapte a tu estilo de contenido."
       />
       {campaigns.length === 0 ? (
         <p className="text-center text-sm text-taupe">

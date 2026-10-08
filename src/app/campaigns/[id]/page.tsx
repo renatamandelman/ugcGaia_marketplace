@@ -6,6 +6,7 @@ import { formatBudgetRange, deadlineLabel } from "@/lib/format";
 import { Avatar } from "@/components/ui/avatar";
 import { StatusBadge, CategoryBadge } from "@/components/ui/badge";
 import { ApplyButton } from "@/components/apply-button";
+import { CampaignOwnerActions } from "@/components/campaigns/owner-actions";
 import {
   ArrowLeftIcon,
   ClockIcon,
@@ -36,7 +37,7 @@ export default async function CampaignDetailPage({
   const { data: row } = await supabase
     .from("campaigns")
     .select(
-      "id, title, description, category, budget_min, budget_max, deliverables, deadline, status, created_at, profiles(full_name)"
+      "id, brand_id, title, description, category, budget_min, budget_max, deliverables, deadline, status, tags, created_at, profiles(full_name)"
     )
     .eq("id", id)
     .single();
@@ -58,6 +59,8 @@ const campaign = {
     brand: brandName(row.profiles as BrandRelation),
   };
   const closed = campaign.status !== "open";
+  const isOwner = user != null && campaign.brand_id === user.id;
+  const tags: string[] = campaign.tags ?? [];
 
   const deliverables: string[] = campaign.deliverables
     ? campaign.deliverables
@@ -87,6 +90,19 @@ const campaign = {
           <h1 className="mt-4 text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
             {campaign.title}
           </h1>
+
+          {tags.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-1.5">
+              {tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-full bg-brand/10 px-2.5 py-1 text-xs font-semibold text-brand"
+                >
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          )}
 
           <div className="mt-4 flex items-center gap-2.5">
             <Avatar name={campaign.brand} size="md" />
@@ -174,18 +190,29 @@ const campaign = {
             </dl>
 
             <div className="mt-6 border-t border-bone pt-6">
-              <div className={cn(closed && "opacity-50")}>
-                <ApplyButton
-                  campaignId={campaign.id}
-                  campaignTitle={campaign.title}
-                  isAuthenticated={Boolean(user)}
-                />
-              </div>
-              <p className="mt-3 text-center text-xs leading-5 text-taupe">
-                {closed
-                  ? "Esta campaña ya no acepta aplicaciones."
-                  : "¿No tenés cuenta? Registrate como creador para aplicar."}
-              </p>
+              {isOwner ? (
+                <>
+                  <CampaignOwnerActions campaignId={campaign.id} />
+                  <p className="mt-3 text-center text-xs leading-5 text-taupe">
+                    Esta es tu campaña: podés editarla o eliminarla.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <div className={cn(closed && "opacity-50")}>
+                    <ApplyButton
+                      campaignId={campaign.id}
+                      campaignTitle={campaign.title}
+                      isAuthenticated={Boolean(user)}
+                    />
+                  </div>
+                  <p className="mt-3 text-center text-xs leading-5 text-taupe">
+                    {closed
+                      ? "Esta campaña ya no acepta aplicaciones."
+                      : "¿No tenés cuenta? Registrate como creador para aplicar."}
+                  </p>
+                </>
+              )}
             </div>
           </div>
         </aside>

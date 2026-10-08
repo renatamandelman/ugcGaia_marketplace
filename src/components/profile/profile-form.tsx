@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { updateProfile, type ProfileState } from "@/app/profile/actions";
 import { buttonClasses } from "@/components/ui/button";
+import { TagsInput } from "@/components/ui/tags-input";
 import { cn } from "@/components/ui/utils";
 import type { Profile } from "@/lib/db-types";
 
@@ -98,6 +99,29 @@ export function ProfileForm({ profile }: { profile: Profile | null }) {
             }
             className={textareaClasses}
           />
+        </label>
+
+        <label className="flex flex-col gap-1.5 sm:col-span-2">
+          <span className="text-sm font-medium text-ink">
+            {profile?.role === "brand"
+              ? "Tags de tu marca"
+              : "Tags de tu contenido"}
+          </span>
+          <TagsInput
+            name="tags"
+            defaultValue={profile?.tags ?? []}
+            placeholder={
+              profile?.role === "brand"
+                ? "Ej: skincare, eco, bienestar"
+                : "Ej: rutina, unboxing, productividad"
+            }
+            max={10}
+          />
+          <span className="text-xs text-taupe">
+            {profile?.role === "brand"
+              ? "Así te encuentran los creadores que ya cubren estos temas."
+              : "Así te encuentran las marcas cuando buscan tu tipo de contenido."}
+          </span>
         </label>
 
         {state?.error ? (

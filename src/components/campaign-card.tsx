@@ -71,6 +71,19 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
           {campaign.description}
         </p>
 
+        {campaign.tags.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {campaign.tags.slice(0, 5).map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full bg-brand/10 px-2 py-0.5 text-[11px] font-semibold text-brand"
+              >
+                #{tag}
+              </span>
+            ))}
+          </div>
+        )}
+
         <dl className="mt-5 grid grid-cols-2 gap-3 border-t border-brand/20 pt-4">
           <div>
             <dt className="text-xs text-taupe">Presupuesto</dt>

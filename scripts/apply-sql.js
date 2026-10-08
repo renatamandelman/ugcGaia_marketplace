@@ -45,6 +45,8 @@ const FILES = [
   { file: "portfolio.sql", label: "Portfolio items" },
   { file: "media-storage.sql", label: "Bucket media + banners" },
   { file: "social-links.sql", label: "Links de redes" },
+  { file: "tags.sql", label: "Tags para búsqueda y matchmaking" },
+  { file: "campaigns-abm.sql", label: "DELETE de campañas (marcas dueñas)" },
 ];
 
 // Códigos de error de Postgres que significan "ya existe" → no es fatal

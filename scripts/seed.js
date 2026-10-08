@@ -39,6 +39,7 @@ const campaigns = [
       "1 video vertical de 15-30 segundos\n2 historias complementarias\nDerechos de uso por 6 meses",
     deadline: "2026-09-15",
     status: "open",
+    tags: ["skincare", "rutina", "piel real", "antes/después"],
   },
   {
     title: "Unboxing de nuestro nuevo mate",
@@ -52,6 +53,7 @@ const campaigns = [
       "1 video vertical de 30-45 segundos\n1 post en feed con fotos reales\nDerechos de uso por 12 meses",
     deadline: "2026-09-22",
     status: "open",
+    tags: ["unboxing", "comida", "mate", "producto real"],
   },
   {
     title: "Outfit de invierno con nuestra línea cápsula",
@@ -65,6 +67,7 @@ const campaigns = [
       "1 reel principal de 30 segundos\n3 fotos de lookbook en alta resolución\n1 historia con el proceso de armado",
     deadline: "2026-09-30",
     status: "open",
+    tags: ["moda", "looks", "outfits", "línea cápsula"],
   },
   {
     title: "Tu setup de home office ergonómico",
@@ -78,6 +81,7 @@ const campaigns = [
       "1 video vertical de 30-45 segundos (antes/después)\nToma b-roll de 15 segundos libre de uso\nDerechos de uso por 6 meses",
     deadline: "2026-09-10",
     status: "open",
+    tags: ["tech", "setup", "productividad", "ergonomía"],
   },
   {
     title: "Receta fácil con nuestro aceite de oliva",
@@ -91,6 +95,7 @@ const campaigns = [
       "1 video vertical de 30-60 segundos\n1 foto del plato terminado\nDerechos de uso por 6 meses",
     deadline: "2026-10-05",
     status: "open",
+    tags: ["cocina", "recetas", "comida casera", "comida"],
   },
   {
     title: "Entrená en casa: 3 ejercicios con mancuernas",
@@ -104,6 +109,7 @@ const campaigns = [
       "1 video vertical de 30-45 segundos\n2 historias de proceso\nLicencia de uso por 6 meses",
     deadline: "2026-09-18",
     status: "open",
+    tags: ["fitness", "entrenamiento", "mancuernas", "en casa"],
   },
 ];
 
@@ -116,6 +122,7 @@ const creators = [
     location: "Buenos Aires, AR",
     bio: "Skincare honesto y mínimo. Productos que uso en serio, rutinas reales de 30 días.",
     portfolio_url: "https://linktr.ee/malenabeauty",
+    tags: ["skincare", "rutina", "piel real", "beauty"],
   },
   {
     name: "Tomás Vega",
@@ -125,6 +132,7 @@ const creators = [
     location: "Córdoba, AR",
     bio: "Recetas caseras en menos de 60 segundos. Cocina argentina con productos de barrio.",
     portfolio_url: "https://tiktok.com/@tomi.gourmet",
+    tags: ["cocina", "recetas", "comida casera", "comida argentina"],
   },
   {
     name: "Juana Pereyra",
@@ -134,6 +142,7 @@ const creators = [
     location: "Rosario, AR",
     bio: "Entrenamientos en casa sin excusas. 15 minutos, cero materiales caros.",
     portfolio_url: "https://youtube.com/@juanitafit",
+    tags: ["fitness", "entrenamiento", "mancuernas", "en casa"],
   },
   {
     name: "Franco Basile",
@@ -143,6 +152,7 @@ const creators = [
     location: "Mendoza, AR",
     bio: "Setup, gadgets y productividad. Reviews que no leen scripts de las marcas.",
     portfolio_url: "https://instagram.com/francotech",
+    tags: ["tech", "setup", "productividad", "reviews"],
   },
   {
     name: "Sol Fontán",
@@ -152,6 +162,7 @@ const creators = [
     location: "Buenos Aires, AR",
     bio: "Moda versátil para el día a día. Looks cápsula y estilo circular.",
     portfolio_url: "https://behance.net/sol-fontan",
+    tags: ["moda", "looks", "outfits", "línea cápsula"],
   },
 ];
 
@@ -262,18 +273,19 @@ async function upsertUser(db, { email, name, role }) {
   return userId;
 }
 
-async function syncProfile(db, userId, { role, name, handle, niche, location, bio, portfolio_url }) {
+async function syncProfile(db, userId, { role, name, handle, niche, location, bio, portfolio_url, tags }) {
   await db.query(
-    `insert into public.profiles (id, role, full_name, handle, niche, location, bio, portfolio_url)
-       values ($1, $2, $3, $4, $5, $6, $7, $8)
+    `insert into public.profiles (id, role, full_name, handle, niche, location, bio, portfolio_url, tags)
+       values ($1, $2, $3, $4, $5, $6, $7, $8, $9)
        on conflict (id) do update set
          full_name = excluded.full_name,
          handle = coalesce(excluded.handle, profiles.handle),
          niche = coalesce(excluded.niche, profiles.niche),
          location = coalesce(excluded.location, profiles.location),
          bio = coalesce(excluded.bio, profiles.bio),
-         portfolio_url = coalesce(excluded.portfolio_url, profiles.portfolio_url)`,
-    [userId, role, name, handle ?? null, niche ?? null, location ?? null, bio ?? null, portfolio_url ?? null]
+         portfolio_url = coalesce(excluded.portfolio_url, profiles.portfolio_url),
+         tags = coalesce(excluded.tags, profiles.tags)`,
+    [userId, role, name, handle ?? null, niche ?? null, location ?? null, bio ?? null, portfolio_url ?? null, tags ?? []]
   );
 }
 
@@ -312,8 +324,8 @@ async function main() {
     for (const campaign of campaigns) {
       await db.query(
         `insert into public.campaigns
-           (brand_id, title, description, category, budget_min, budget_max, deliverables, deadline, status)
-         values ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
+           (brand_id, title, description, category, budget_min, budget_max, deliverables, deadline, status, tags)
+         values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
         [
           ids[campaign.brand],
           campaign.title,
@@ -324,6 +336,7 @@ async function main() {
           campaign.deliverables,
           campaign.deadline,
           campaign.status,
+          campaign.tags ?? [],
         ]
       );
       console.log(`OK campaña: ${campaign.title}`);

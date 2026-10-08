@@ -12,6 +12,7 @@ export interface CampaignFeedItem {
   deliverables: string | null;
   deadline: string | null;
   status: CampaignRow["status"];
+  tags: string[];
   created_at: string;
 }
 
@@ -39,6 +40,7 @@ export function mapCampaignRow(
     deliverables: row.deliverables ?? null,
     deadline: row.deadline ?? null,
     status: row.status,
+    tags: row.tags ?? [],
     created_at: row.created_at,
   };
 }

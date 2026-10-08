@@ -11,6 +11,7 @@ export interface Profile {
   portfolio_url?: string | null;
   niche?: string | null;
   location?: string | null;
+  tags?: string[] | null;
   industry?: string | null;
   website?: string | null;
   tiktok_url?: string | null;
@@ -33,6 +34,7 @@ export interface CampaignRow {
   deliverables?: string | null;
   deadline?: string | null;
   status: CampaignStatus;
+  tags?: string[] | null;
   created_at: string;
 }
 

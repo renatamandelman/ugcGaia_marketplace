@@ -1,8 +1,9 @@
 "use client";
 
 import { useActionState } from "react";
-import { createCampaign } from "@/app/campaigns/actions";
+import { createCampaign, updateCampaign } from "@/app/campaigns/actions";
 import { buttonClasses } from "@/components/ui/button";
+import { TagsInput } from "@/components/ui/tags-input";
 import { cn } from "@/components/ui/utils";
 
 const inputClasses =
@@ -23,18 +24,46 @@ const categories = [
   "Otro",
 ];
 
-export function CampaignForm() {
-  const [state, formAction, pending] = useActionState(createCampaign, {
+const statuses = [
+  { value: "open", label: "Abierta (recibe aplicaciones)" },
+  { value: "filled", label: "Completa" },
+  { value: "closed", label: "Cerrada" },
+];
+
+export interface CampaignFormInitial {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  budget_min: number;
+  budget_max: number | null;
+  deliverables: string | null;
+  deadline: string | null;
+  status: "open" | "filled" | "closed";
+  tags: string[];
+}
+
+interface CampaignFormProps {
+  /** Si se pasa, el formulario edita esa campaña en vez de crear una nueva. */
+  campaign?: CampaignFormInitial;
+}
+
+export function CampaignForm({ campaign }: CampaignFormProps) {
+  const action = campaign ? updateCampaign : createCampaign;
+  const [state, formAction, pending] = useActionState(action, {
     error: "",
   });
 
   return (
     <form action={formAction} className="grid gap-4">
+      {campaign ? <input type="hidden" name="id" value={campaign.id} /> : null}
+
       <label className="flex flex-col gap-1.5">
         <span className="text-sm font-medium text-ink">Título del brief</span>
         <input
           name="title"
           required
+          defaultValue={campaign?.title}
           placeholder="Ej: Necesito 3 videos UGC para nuestra crema hidratante"
           className={inputClasses}
         />
@@ -46,6 +75,7 @@ export function CampaignForm() {
           name="description"
           required
           rows={4}
+          defaultValue={campaign?.description}
           placeholder="Contanos en detalle qué necesitás: tono, estilo, duración, qué transmitir..."
           className={textareaClasses}
         />
@@ -54,7 +84,12 @@ export function CampaignForm() {
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="flex flex-col gap-1.5">
           <span className="text-sm font-medium text-ink">Categoría</span>
-          <select name="category" required className={inputClasses}>
+          <select
+            name="category"
+            required
+            defaultValue={campaign?.category ?? ""}
+            className={inputClasses}
+          >
             <option value="">Seleccioná...</option>
             {categories.map((c) => (
               <option key={c} value={c}>
@@ -66,7 +101,12 @@ export function CampaignForm() {
 
         <label className="flex flex-col gap-1.5">
           <span className="text-sm font-medium text-ink">Deadline</span>
-          <input name="deadline" type="date" className={inputClasses} />
+          <input
+            name="deadline"
+            type="date"
+            defaultValue={campaign?.deadline ?? ""}
+            className={inputClasses}
+          />
         </label>
       </div>
 
@@ -80,6 +120,7 @@ export function CampaignForm() {
             type="number"
             required
             min={0}
+            defaultValue={campaign?.budget_min}
             placeholder="50"
             className={inputClasses}
           />
@@ -93,6 +134,7 @@ export function CampaignForm() {
             name="budgetMax"
             type="number"
             min={0}
+            defaultValue={campaign?.budget_max ?? ""}
             placeholder="150"
             className={inputClasses}
           />
@@ -104,10 +146,41 @@ export function CampaignForm() {
         <textarea
           name="deliverables"
           rows={2}
+          defaultValue={campaign?.deliverables ?? ""}
           placeholder="Ej: 3 videos verticales de 30s + 2 imágenes estáticas"
           className={textareaClasses}
         />
       </label>
+
+      <label className="flex flex-col gap-1.5">
+        <span className="text-sm font-medium text-ink">Tags de la campaña</span>
+        <TagsInput
+          name="tags"
+          defaultValue={campaign?.tags}
+          placeholder="Ej: antes/después, unboxing, piel real, voz local"
+          max={8}
+        />
+        <span className="text-xs text-taupe">
+          Así te encuentran los creadores que ya trabajan estos temas.
+        </span>
+      </label>
+
+      {campaign ? (
+        <label className="flex flex-col gap-1.5">
+          <span className="text-sm font-medium text-ink">Estado</span>
+          <select
+            name="status"
+            defaultValue={campaign.status}
+            className={inputClasses}
+          >
+            {statuses.map((s) => (
+              <option key={s.value} value={s.value}>
+                {s.label}
+              </option>
+            ))}
+          </select>
+        </label>
+      ) : null}
 
       {state?.error ? (
         <p className="text-sm font-medium text-red-600" role="alert">
@@ -124,7 +197,13 @@ export function CampaignForm() {
             "w-full disabled:cursor-not-allowed disabled:opacity-60"
           )}
         >
-          {pending ? "Publicando..." : "Publicar campaña"}
+          {pending
+            ? campaign
+              ? "Guardando..."
+              : "Publicando..."
+            : campaign
+              ? "Guardar cambios"
+              : "Publicar campaña"}
         </button>
       </div>
     </form>

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { parseTags } from "@/lib/tags";
 
 export interface ProfileState {
   error?: string;
@@ -24,6 +25,7 @@ export async function updateProfile(prev: ProfileState, formData: FormData) {
   const niche = String(formData.get("niche") ?? "");
   const location = String(formData.get("location") ?? "");
   const portfolioUrl = String(formData.get("portfolioUrl") ?? "");
+  const tags = parseTags(formData.get("tags"), 10);
 
   const { error } = await supabase
     .from("profiles")
@@ -34,6 +36,7 @@ export async function updateProfile(prev: ProfileState, formData: FormData) {
       niche: niche || null,
       location: location || null,
       portfolio_url: portfolioUrl || null,
+      tags,
       updated_at: new Date().toISOString(),
     })
     .eq("id", user.id);

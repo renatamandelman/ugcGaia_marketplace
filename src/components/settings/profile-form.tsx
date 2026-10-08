@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
+import { TagsInput } from "@/components/ui/tags-input";
 import { TikTokIcon, InstagramIcon, YouTubeIcon } from "@/components/ui/icons";
 import type { Profile } from "@/lib/db-types";
 
@@ -34,6 +35,7 @@ export function ProfileSettingsForm({ profile }: ProfileSettingsFormProps) {
   const [niches, setNiches] = useState<string[]>(
     profile.niche ? profile.niche.split(",").map((n) => n.trim()) : []
   );
+  const [tags, setTags] = useState<string[]>(profile.tags ?? []);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -62,6 +64,7 @@ export function ProfileSettingsForm({ profile }: ProfileSettingsFormProps) {
         niche: niches.join(", ") || null,
         avatar_url: avatarUrl || null,
         banner_url: bannerUrl || null,
+        tags,
         tiktok_url: tiktokUrl.trim() || null,
         instagram_url: instagramUrl.trim() || null,
         youtube_url: youtubeUrl.trim() || null,
@@ -93,6 +96,7 @@ export function ProfileSettingsForm({ profile }: ProfileSettingsFormProps) {
     setNiches(
       profile.niche ? profile.niche.split(",").map((n) => n.trim()) : []
     );
+    setTags(profile.tags ?? []);
   }
 
   return (
@@ -273,6 +277,23 @@ export function ProfileSettingsForm({ profile }: ProfileSettingsFormProps) {
               );
             })}
           </div>
+        </div>
+
+        {/* Tags */}
+        <div className="mt-5 space-y-2">
+          <label className="text-sm font-bold text-ink">
+            Tags de contenido (hasta 10)
+          </label>
+          <TagsInput
+            defaultValue={tags}
+            onChange={setTags}
+            max={10}
+            placeholder="Ej: skincare, unboxing, antes/después, reviews"
+          />
+          <p className="text-xs text-taupe">
+            Las marcas te buscan por estos tags en la exploración. Son
+            independientes de los nichos: agregan lo específico de tu contenido.
+          </p>
         </div>
 
         {/* Bio */}
