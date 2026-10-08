@@ -3,7 +3,6 @@ import Link from "next/link";
 import { Section, SectionHeading } from "@/components/ui/section";
 import { CreatorCard } from "@/components/creator-card";
 import { SearchIcon } from "@/components/ui/icons";
-import { cn } from "@/components/ui/utils";
 import { createClient } from "@/lib/supabase/server";
 import {
   creatorsHref,
@@ -16,11 +15,11 @@ import {
 export const metadata: Metadata = {
   title: "Explorar creadores",
   description:
-    "Descubrí creadores UGC de GaiaUGC: filtrá por tags y nicho para encontrar el perfil ideal para tu marca.",
+    "Descubrí creadores UGC de GaiaUGC: filtrá por tags para encontrar el perfil ideal para tu marca.",
 };
 
 const PROFILE_COLUMNS =
-  "id, full_name, bio, niche, location, avatar_url, banner_url, tags, tiktok_url, instagram_url, youtube_url";
+  "id, full_name, bio, location, avatar_url, banner_url, tags, tiktok_url, instagram_url, youtube_url";
 
 export default async function CreatorsPage({
   searchParams,
@@ -33,25 +32,17 @@ export default async function CreatorsPage({
   const selectedTags = parseTagsParam(
     typeof params.tags === "string" ? params.tags : ""
   );
-  const niche = typeof params.niche === "string" ? params.niche : "";
 
   const supabase = await createClient();
 
-  // Nubes de filtros: todos los tags y nichos de creadores (siempre visibles,
-  // aunque el filtro activo reduzca los resultados)
-  const [tagRows, nicheRows] = await Promise.all([
-    supabase.from("profiles").select("tags").eq("role", "creator"),
-    supabase
-      .from("profiles")
-      .select("niche")
-      .eq("role", "creator")
-      .not("niche", "is", null),
-  ]);
-  const allTags = [...new Set((tagRows.data ?? []).flatMap((r) => r.tags ?? []))].sort(
-    (a, b) => a.localeCompare(b)
-  );
-  const allNiches = [
-    ...new Set((nicheRows.data ?? []).flatMap((r) => (r.niche ? [r.niche] : []))),
+  // Nube de tags: todos los tags de creadores (siempre visible, aunque el
+  // filtro activo reduzca los resultados)
+  const { data: tagRows } = await supabase
+    .from("profiles")
+    .select("tags")
+    .eq("role", "creator");
+  const allTags = [
+    ...new Set((tagRows ?? []).flatMap((r) => r.tags ?? [])),
   ].sort((a, b) => a.localeCompare(b));
 
   // Filtros server-side: el índice GIN de profiles.tags hace el trabajo pesado
@@ -63,24 +54,23 @@ export default async function CreatorsPage({
 
   // @> containment = TODOS los tags seleccionados (AND), usa profiles_tags_gin_idx
   if (selectedTags.length > 0) query = query.contains("tags", selectedTags);
-  if (niche) query = query.eq("niche", niche);
   if (q) {
     query = query.or(
-      `full_name.ilike.%${q}%,bio.ilike.%${q}%,niche.ilike.%${q}%,location.ilike.%${q}%`
+      `full_name.ilike.%${q}%,bio.ilike.%${q}%,location.ilike.%${q}%`
     );
   }
 
   const { data } = await query;
   const creators = (data ?? []).map((row) => mapProfileToCreator(row));
 
-  const hasFilters = q !== "" || selectedTags.length > 0 || niche !== "";
+  const hasFilters = q !== "" || selectedTags.length > 0;
   const clearHref = creatorsHref({});
 
   return (
     <Section>
       <SectionHeading
         title="Explorar creadores"
-        description="Buscá por nombre o bio, filtrá por tags y nicho, y encontrá al creador ideal para tu marca."
+        description="Buscá por nombre o bio, filtrá por tags, y encontrá al creador ideal para tu marca."
       />
 
       {/* Buscador por texto — GET server-side */}
@@ -92,7 +82,6 @@ export default async function CreatorsPage({
         {selectedTags.length > 0 ? (
           <input type="hidden" name="tags" value={selectedTags.join(",")} />
         ) : null}
-        {niche ? <input type="hidden" name="niche" value={niche} /> : null}
         <SearchIcon
           width={18}
           height={18}
@@ -107,47 +96,21 @@ export default async function CreatorsPage({
         />
       </form>
 
-      {/* Filtro por nicho */}
-      {allNiches.length > 0 && (
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
-          {allNiches.map((n) => (
-            <Link
-              key={n}
-              href={creatorsHref({
-                q: rawQ || undefined,
-                tags: selectedTags,
-                niche: n === niche ? undefined : n,
-              })}
-              className={cn(
-                "rounded-full px-4 py-2 text-sm font-medium transition-colors",
-                n === niche
-                  ? "bg-brand text-white shadow-sm shadow-brand/25"
-                  : "bg-white text-taupe ring-1 ring-inset ring-brand/45 hover:bg-brand/10"
-              )}
-            >
-              {n}
-            </Link>
-          ))}
-        </div>
-      )}
-
-      {/* Filtro por tags — chips toggleables vía URL */}
+      {/* Filtro por tags — chips toggleables */}
       {allTags.length > 0 && (
-        <div className="mt-4 flex flex-wrap items-center justify-center gap-1.5">
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-1.5">
           {allTags.map((tag) => (
             <Link
               key={tag}
               href={creatorsHref({
                 q: rawQ || undefined,
                 tags: toggleTagInList(selectedTags, tag),
-                niche: niche || undefined,
               })}
-              className={cn(
-                "rounded-full px-3 py-1 text-xs font-semibold transition-colors",
+              className={
                 selectedTags.includes(tag)
-                  ? "bg-ink text-white"
-                  : "bg-brand/10 text-brand hover:bg-brand/20"
-              )}
+                  ? "rounded-full bg-ink px-3 py-1 text-xs font-semibold text-white transition-colors"
+                  : "rounded-full bg-brand/10 px-3 py-1 text-xs font-semibold text-brand transition-colors hover:bg-brand/20"
+              }
             >
               #{tag}
             </Link>

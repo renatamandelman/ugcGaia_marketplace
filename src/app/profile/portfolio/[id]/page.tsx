@@ -90,11 +90,6 @@ export default async function PortfolioPage({ params }: PortfolioPageProps) {
                   <h1 className="text-3xl font-bold tracking-tight text-ink">
                     {profile.full_name}
                   </h1>
-                  {profile.niche && (
-                    <span className="rounded-full bg-mint/50 px-2.5 py-0.5 text-xs font-bold text-brand">
-                      {profile.niche}
-                    </span>
-                  )}
                 </div>
                 <p className="font-medium text-taupe">
                   {profile.bio || "Creador de contenido UGC en Gaia"}

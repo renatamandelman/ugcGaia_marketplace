@@ -57,24 +57,6 @@ export function ProfileForm({ profile }: { profile: Profile | null }) {
         <label className="flex flex-col gap-1.5 sm:col-span-2">
           <span className="text-sm font-medium text-ink">
             {profile?.role === "brand"
-              ? "¿Qué marca sos?"
-              : "Nicho de contenido"}
-          </span>
-          <input
-            name="niche"
-            defaultValue={profile?.niche ?? ""}
-            placeholder={
-              profile?.role === "brand"
-                ? "Skincare, cosmética, moda..."
-                : "Beauty, food, tech..."
-            }
-            className={inputClasses}
-          />
-        </label>
-
-        <label className="flex flex-col gap-1.5 sm:col-span-2">
-          <span className="text-sm font-medium text-ink">
-            {profile?.role === "brand"
               ? "Sitio web / contacto"
               : "Link a tu portfolio"}
           </span>

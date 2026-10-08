@@ -11,17 +11,6 @@ interface ProfileSettingsFormProps {
   profile: Profile;
 }
 
-const ALL_NICHES = [
-  "Skincare",
-  "Belleza & Makeup",
-  "Food & Recetas",
-  "Fitness",
-  "Tech & Unboxing",
-  "Moda",
-  "Lifestyle & Familia",
-  "Home & Deco",
-];
-
 export function ProfileSettingsForm({ profile }: ProfileSettingsFormProps) {
   const [name, setName] = useState(profile.full_name || "");
   const [handle, setHandle] = useState(profile.handle || "");
@@ -32,23 +21,12 @@ export function ProfileSettingsForm({ profile }: ProfileSettingsFormProps) {
   const [tiktokUrl, setTiktokUrl] = useState(profile.tiktok_url || "");
   const [instagramUrl, setInstagramUrl] = useState(profile.instagram_url || "");
   const [youtubeUrl, setYoutubeUrl] = useState(profile.youtube_url || "");
-  const [niches, setNiches] = useState<string[]>(
-    profile.niche ? profile.niche.split(",").map((n) => n.trim()) : []
-  );
   const [tags, setTags] = useState<string[]>(profile.tags ?? []);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const supabase = createClient();
-
-  function toggleNiche(niche: string) {
-    if (niches.includes(niche)) {
-      setNiches(niches.filter((n) => n !== niche));
-    } else if (niches.length < 4) {
-      setNiches([...niches, niche]);
-    }
-  }
 
   async function handleSave() {
     setSaving(true);
@@ -61,7 +39,6 @@ export function ProfileSettingsForm({ profile }: ProfileSettingsFormProps) {
         handle: handle.trim() || null,
         location: location.trim() || null,
         bio: bio.trim() || null,
-        niche: niches.join(", ") || null,
         avatar_url: avatarUrl || null,
         banner_url: bannerUrl || null,
         tags,
@@ -93,9 +70,6 @@ export function ProfileSettingsForm({ profile }: ProfileSettingsFormProps) {
     setTiktokUrl(profile.tiktok_url || "");
     setInstagramUrl(profile.instagram_url || "");
     setYoutubeUrl(profile.youtube_url || "");
-    setNiches(
-      profile.niche ? profile.niche.split(",").map((n) => n.trim()) : []
-    );
     setTags(profile.tags ?? []);
   }
 
@@ -253,32 +227,6 @@ export function ProfileSettingsForm({ profile }: ProfileSettingsFormProps) {
           </Field>
         </div>
 
-        {/* Niches */}
-        <div className="mt-5 space-y-2">
-          <label className="text-sm font-bold text-ink">Nichos de contenido (hasta 4)</label>
-          <div className="flex flex-wrap gap-2">
-            {ALL_NICHES.map((niche) => {
-              const selected = niches.includes(niche);
-              return (
-                <button
-                  key={niche}
-                  onClick={() => toggleNiche(niche)}
-                  className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold transition-colors ${
-                    selected
-                      ? "bg-brand text-white shadow-sm"
-                      : "border border-bone bg-paper-deep text-taupe hover:border-brand"
-                  }`}
-                >
-                  {selected ? niche : `+ ${niche}`}
-                  {selected && (
-                    <svg width={10} height={10} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
         {/* Tags */}
         <div className="mt-5 space-y-2">
           <label className="text-sm font-bold text-ink">
@@ -291,8 +239,8 @@ export function ProfileSettingsForm({ profile }: ProfileSettingsFormProps) {
             placeholder="Ej: skincare, unboxing, antes/después, reviews"
           />
           <p className="text-xs text-taupe">
-            Las marcas te buscan por estos tags en la exploración. Son
-            independientes de los nichos: agregan lo específico de tu contenido.
+            Las marcas te buscan por estos tags en la exploración. Cuanto más
+            específicos, mejor el matchmaking con las campañas.
           </p>
         </div>
 

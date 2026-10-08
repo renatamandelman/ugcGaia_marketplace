@@ -55,12 +55,6 @@ export function CreatorCard({ creator }: CreatorCardProps) {
           ) : null}
         </div>
 
-        {creator.niche ? (
-          <span className="mt-2 w-fit rounded-full bg-brand/10 px-2.5 py-0.5 text-xs font-semibold text-brand">
-            {creator.niche}
-          </span>
-        ) : null}
-
         {creator.bio ? (
           <p className="mt-2 line-clamp-2 text-sm leading-6 text-taupe">
             {creator.bio}

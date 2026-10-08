@@ -73,7 +73,6 @@ export default async function DashboardPage() {
           <RecommendedBriefs
             briefs={recommendedBriefs}
             creatorTags={creatorTags}
-            niche={profile?.niche ?? null}
           />
         </div>
 

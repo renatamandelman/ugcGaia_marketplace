@@ -22,7 +22,6 @@ export async function updateProfile(prev: ProfileState, formData: FormData) {
   const fullName = String(formData.get("fullName") ?? "");
   const handle = String(formData.get("handle") ?? "");
   const bio = String(formData.get("bio") ?? "");
-  const niche = String(formData.get("niche") ?? "");
   const location = String(formData.get("location") ?? "");
   const portfolioUrl = String(formData.get("portfolioUrl") ?? "");
   const tags = parseTags(formData.get("tags"), 10);
@@ -33,7 +32,6 @@ export async function updateProfile(prev: ProfileState, formData: FormData) {
       full_name: fullName,
       handle: handle || null,
       bio: bio || null,
-      niche: niche || null,
       location: location || null,
       portfolio_url: portfolioUrl || null,
       tags,

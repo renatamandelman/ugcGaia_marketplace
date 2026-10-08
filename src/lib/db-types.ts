@@ -9,7 +9,6 @@ export interface Profile {
   avatar_url?: string | null;
   banner_url?: string | null;
   portfolio_url?: string | null;
-  niche?: string | null;
   location?: string | null;
   tags?: string[] | null;
   industry?: string | null;

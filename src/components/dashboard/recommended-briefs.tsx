@@ -18,20 +18,16 @@ export interface RecommendedBrief {
 interface RecommendedBriefsProps {
   briefs: RecommendedBrief[];
   creatorTags: string[];
-  niche: string | null;
 }
 
 export function RecommendedBriefs({
   briefs,
   creatorTags,
-  niche,
 }: RecommendedBriefsProps) {
   const subtitle =
     creatorTags.length > 0
       ? `Basado en tus tags: ${creatorTags.map((t) => `#${t}`).join(" ")}`
-      : niche
-        ? `Basado en tu nicho ${niche} — agregá tags para afinar`
-        : "Cargá tus tags para recibir recomendaciones";
+      : "Cargá tus tags para recibir recomendaciones";
 
   return (
     <section className="rounded-3xl border border-bone bg-white p-6 shadow-sm">

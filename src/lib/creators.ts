@@ -5,7 +5,6 @@ export interface CreatorCardItem {
   id: string;
   full_name: string;
   bio: string | null;
-  niche: string | null;
   location: string | null;
   avatar_url: string | null;
   banner_url: string | null;
@@ -21,7 +20,6 @@ export function mapProfileToCreator(
     | "id"
     | "full_name"
     | "bio"
-    | "niche"
     | "location"
     | "avatar_url"
     | "banner_url"
@@ -35,7 +33,6 @@ export function mapProfileToCreator(
     id: row.id,
     full_name: row.full_name,
     bio: row.bio ?? null,
-    niche: row.niche ?? null,
     location: row.location ?? null,
     avatar_url: row.avatar_url ?? null,
     banner_url: row.banner_url ?? null,
@@ -49,7 +46,6 @@ export function mapProfileToCreator(
 export interface CreatorsFilters {
   q?: string;
   tags?: string[];
-  niche?: string;
 }
 
 /**
@@ -73,11 +69,10 @@ export function parseTagsParam(raw: string): string[] {
 }
 
 /** Construye /creators?... preservando los filtros activos (para links de tags/nichos). */
-export function creatorsHref({ q, tags = [], niche }: CreatorsFilters): string {
+export function creatorsHref({ q, tags = [] }: CreatorsFilters): string {
   const params = new URLSearchParams();
   if (q) params.set("q", q);
   if (tags.length > 0) params.set("tags", tags.join(","));
-  if (niche) params.set("niche", niche);
   const qs = params.toString();
   return qs ? `/creators?${qs}` : "/creators";
 }
