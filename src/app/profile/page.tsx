@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { CollapsibleProfileForm } from "@/components/profile/collapsible-profile-form";
 import { ProfileForm } from "@/components/profile/profile-form";
-import { BrandDashboardContainer } from "@/components/profile/dashboard";
+import { BrandDashboard } from "@/components/profile/brand-dashboard";
 import { MyApplications } from "@/components/profile/my-applications";
 import { PortfolioList } from "@/components/profile/portfolio";
 
@@ -43,7 +43,7 @@ export default async function ProfilePage() {
 
       {isBrand ? (
         <div className="mt-8 space-y-6">
-          <BrandDashboardContainer />
+          <BrandDashboard />
           <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
             <CollapsibleProfileForm profile={profile} />
             <aside>

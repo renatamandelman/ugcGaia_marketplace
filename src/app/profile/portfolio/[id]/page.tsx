@@ -2,6 +2,7 @@ import { redirect, notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { PortfolioShowcase } from "@/components/portfolio/showcase";
 import { RateCards } from "@/components/portfolio/rate-cards";
+import { MessageCreatorButton } from "@/components/messages/message-creator-button";
 import { Avatar } from "@/components/ui/avatar";
 import { TikTokIcon, InstagramIcon, YouTubeIcon } from "@/components/ui/icons";
 
@@ -30,6 +31,17 @@ export default async function PortfolioPage({ params }: PortfolioPageProps) {
   } = await supabase.auth.getUser();
 
   const isOwner = user?.id === id;
+
+  let viewerRole: string | null = null;
+  if (user) {
+    const { data: viewer } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+    viewerRole = viewer?.role ?? null;
+  }
+  const canMessage = viewerRole === "brand" && !isOwner;
 
   // Fetch portfolio items
   const { data: portfolioItems } = await supabase
@@ -119,12 +131,13 @@ export default async function PortfolioPage({ params }: PortfolioPageProps) {
 
             {/* CTA buttons */}
             <div className="flex w-full flex-wrap items-center gap-3 self-stretch sm:w-auto sm:flex-nowrap lg:self-end">
-<button className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl border border-bone bg-paper px-6 text-sm font-bold text-brand transition-colors hover:bg-paper-deep">
-                <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" /></svg>
-                Mensaje
-              </button>
-             
-             
+              {canMessage ? (
+                <MessageCreatorButton
+                  creatorId={id}
+                  className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl border border-bone bg-paper px-6 text-sm font-bold text-brand transition-colors hover:bg-paper-deep disabled:cursor-not-allowed disabled:opacity-60"
+                  label="Mensaje"
+                />
+              ) : null}
             </div>
           </div>
 

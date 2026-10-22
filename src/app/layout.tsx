@@ -33,6 +33,29 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  let unreadMessages = 0;
+  let unreadNotifications = 0;
+
+  if (user) {
+    const [messagesResult, activityResult] = await Promise.all([
+      supabase
+        .from("notifications")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", user.id)
+        .eq("type", "message_received")
+        .is("read_at", null),
+      supabase
+        .from("notifications")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", user.id)
+        .neq("type", "message_received")
+        .is("read_at", null),
+    ]);
+
+    unreadMessages = messagesResult.count ?? 0;
+    unreadNotifications = activityResult.count ?? 0;
+  }
+
   return (
     <html
       lang="es"
@@ -40,7 +63,11 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        <Navbar user={user} />
+        <Navbar
+          user={user}
+          unreadMessages={unreadMessages}
+          unreadNotifications={unreadNotifications}
+        />
         <main className="flex-1">{children}</main>
         <Footer />
       </body>

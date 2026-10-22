@@ -38,6 +38,9 @@ export async function updateSession(request: NextRequest) {
   const isProtectedRoute =
     request.nextUrl.pathname.startsWith("/profile") ||
     request.nextUrl.pathname.startsWith("/campaigns/new") ||
+    request.nextUrl.pathname.startsWith("/messages") ||
+    request.nextUrl.pathname.startsWith("/notifications") ||
+    request.nextUrl.pathname.startsWith("/collaborations") ||
     request.nextUrl.pathname.endsWith("/apply");
 
   // La landing (/), el feed de campañas y los detalles son públicos

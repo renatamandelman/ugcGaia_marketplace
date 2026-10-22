@@ -8,10 +8,14 @@ import { EditIcon, TrashIcon } from "@/components/ui/icons";
 
 interface CampaignOwnerActionsProps {
   campaignId: string;
+  redirectTo?: string;
 }
 
 /** Controles de la marca dueña sobre su campaña: editar y eliminar. */
-export function CampaignOwnerActions({ campaignId }: CampaignOwnerActionsProps) {
+export function CampaignOwnerActions({
+  campaignId,
+  redirectTo,
+}: CampaignOwnerActionsProps) {
   const [pending, startTransition] = useTransition();
 
   return (
@@ -27,7 +31,7 @@ export function CampaignOwnerActions({ campaignId }: CampaignOwnerActionsProps) 
       <form
         action={() => {
           startTransition(async () => {
-            await deleteCampaign(campaignId);
+            await deleteCampaign(campaignId, redirectTo);
           });
         }}
       >

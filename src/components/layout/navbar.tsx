@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useTransition, useState } from "react";
 import { signOut } from "@/app/auth/actions";
 import { ButtonLink } from "@/components/ui/button";
-import { MenuIcon, XIcon } from "@/components/ui/icons";
+import { BellIcon, MailIcon, MenuIcon, XIcon } from "@/components/ui/icons";
 import { cn } from "@/components/ui/utils";
 import type { User } from "@supabase/supabase-js";
 
@@ -16,9 +16,54 @@ const publicLinks = [
 
 interface NavbarProps {
   user?: User | null;
+  unreadMessages?: number;
+  unreadNotifications?: number;
 }
 
-export function Navbar({ user }: NavbarProps) {
+function NavIconLink({
+  href,
+  label,
+  count = 0,
+  showLabel = false,
+  onNavigate,
+  children,
+}: {
+  href: string;
+  label: string;
+  count?: number;
+  showLabel?: boolean;
+  onNavigate?: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      onClick={onNavigate}
+      aria-label={label}
+      title={label}
+      className={cn(
+        "relative inline-flex items-center gap-2 rounded-lg text-[#414846] transition-colors hover:bg-paper hover:text-brand-deep",
+        showLabel ? "px-3 py-2.5 text-sm font-medium" : "size-10 justify-center"
+      )}
+    >
+      <span className="relative inline-flex">
+        {children}
+        {count > 0 ? (
+          <span className="absolute -top-2 -right-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-semibold leading-none text-white">
+            {count > 99 ? "99+" : count}
+          </span>
+        ) : null}
+      </span>
+      {showLabel ? <span>{label}</span> : null}
+    </Link>
+  );
+}
+
+export function Navbar({
+  user,
+  unreadMessages = 0,
+  unreadNotifications = 0,
+}: NavbarProps) {
   const [open, setOpen] = useState(false);
   const [signingOut, startSignOut] = useTransition();
 
@@ -29,10 +74,12 @@ export function Navbar({ user }: NavbarProps) {
         { label: "Panel", href: "/profile" },
         { label: "Campañas", href: "/campaigns" },
         { label: "Creadores", href: "/creators" },
+        { label: "Colaboraciones", href: "/collaborations" },
       ]
     : [
         { label: "Dashboard", href: "/dashboard" },
         { label: "Campañas", href: "/campaigns" },
+        { label: "Colaboraciones", href: "/collaborations" },
         { label: "Portfolio", href: "/profile/settings" },
       ];
 
@@ -71,6 +118,21 @@ export function Navbar({ user }: NavbarProps) {
         <div className="hidden items-center gap-2.5 md:flex">
           {user ? (
             <>
+              <NavIconLink
+                href="/messages"
+                label="Mensajes"
+                count={unreadMessages}
+              >
+                <MailIcon width={19} height={19} />
+              </NavIconLink>
+              <NavIconLink
+                href="/notifications"
+                label="Notificaciones"
+                count={unreadNotifications}
+              >
+                <BellIcon width={19} height={19} />
+              </NavIconLink>
+              <span className="mx-1 h-5 w-px bg-bone" aria-hidden="true" />
               <ButtonLink
                 href={isBrand ? "/profile" : "/profile/settings"}
                 variant="secondary"
@@ -115,7 +177,7 @@ export function Navbar({ user }: NavbarProps) {
       <div
         className={cn(
           "overflow-hidden border-t border-bone/60 bg-paper transition-all duration-200 md:hidden",
-          open ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+          open ? "max-h-[32rem] opacity-100" : "max-h-0 opacity-0"
         )}
       >
         <nav className="flex flex-col gap-1 px-5 py-4">
@@ -132,6 +194,26 @@ export function Navbar({ user }: NavbarProps) {
           <div className="mt-3 flex flex-col gap-2 border-t border-bone/50 pt-4">
             {user ? (
               <>
+                <div className="-mx-1 flex items-center gap-1 pb-1">
+                  <NavIconLink
+                    href="/messages"
+                    label="Mensajes"
+                    count={unreadMessages}
+                    showLabel
+                    onNavigate={() => setOpen(false)}
+                  >
+                    <MailIcon width={18} height={18} />
+                  </NavIconLink>
+                  <NavIconLink
+                    href="/notifications"
+                    label="Notificaciones"
+                    count={unreadNotifications}
+                    showLabel
+                    onNavigate={() => setOpen(false)}
+                  >
+                    <BellIcon width={18} height={18} />
+                  </NavIconLink>
+                </div>
                 <ButtonLink
                   href={isBrand ? "/profile" : "/profile/settings"}
                   variant="secondary"

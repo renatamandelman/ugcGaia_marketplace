@@ -207,7 +207,10 @@ export async function updateCampaign(
   redirect(`/campaigns/${campaignId}`);
 }
 
-export async function deleteCampaign(campaignId: string) {
+export async function deleteCampaign(
+  campaignId: string,
+  redirectTo = "/campaigns"
+) {
   const owner = await requireCampaignOwner(campaignId);
   if (owner.error) return { error: owner.error };
   const supabase = owner.supabase;
@@ -223,5 +226,6 @@ export async function deleteCampaign(campaignId: string) {
 
   revalidatePath("/campaigns");
   revalidatePath("/dashboard");
-  redirect("/campaigns");
+  revalidatePath("/profile");
+  redirect(redirectTo);
 }

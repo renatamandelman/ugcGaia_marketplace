@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 
 interface CampaignRef {
@@ -64,6 +65,26 @@ export async function MyApplications() {
 
   const applications = (data ?? []) as ApplicationRow[];
 
+  // Hilos abiertos: las postulaciones aceptadas tienen conversación
+  const acceptedIds = applications
+    .filter((app) => app.status === "accepted")
+    .map((app) => app.id);
+
+  const { data: conversations } =
+    acceptedIds.length > 0
+      ? await supabase
+          .from("conversations")
+          .select("id, application_id")
+          .in("application_id", acceptedIds)
+      : { data: [] };
+
+  const conversationByApplication = new Map(
+    (conversations ?? []).map((row) => [
+      row.application_id ?? "",
+      row.id as string,
+    ])
+  );
+
   if (applications.length === 0) {
     return (
       <div className="rounded-2xl border border-bone bg-white p-6 sm:p-8">
@@ -85,12 +106,12 @@ export async function MyApplications() {
             {applications.length} campaña{applications.length !== 1 ? "s" : ""} a las que aplicaste
           </p>
         </div>
-        <a
+        <Link
           href="/campaigns"
           className="text-sm font-semibold text-brand hover:text-brand-deep"
         >
           Explorar más →
-        </a>
+        </Link>
       </div>
       <ul className="mt-4 divide-y divide-bone/60">
         {applications.map((app) => {
@@ -101,12 +122,12 @@ export async function MyApplications() {
             <li key={app.id} className="py-4 first:pt-0 last:pb-0">
               <div className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
-                  <a
+                  <Link
                     href={`/campaigns/${campaign?.id ?? ""}`}
                     className="text-sm font-semibold text-ink transition-colors hover:text-brand"
                   >
                     {campaign?.title ?? "Campaña"}
-                  </a>
+                  </Link>
                   <p className="mt-0.5 text-xs text-taupe">
                     {brandName ?? ""}
                     {campaign?.budget_min !== undefined ? (
@@ -120,7 +141,17 @@ export async function MyApplications() {
                     Aplicaste el {formatDate(app.created_at)}
                   </p>
                 </div>
-                <StatusBadge status={app.status} />
+                <div className="flex shrink-0 flex-col items-end gap-2">
+                  <StatusBadge status={app.status} />
+                  {conversationByApplication.get(app.id) ? (
+                    <a
+                      href={`/messages/${conversationByApplication.get(app.id)}`}
+                      className="text-xs font-semibold text-brand transition-colors hover:text-brand-deep"
+                    >
+                      Abrir conversación →
+                    </a>
+                  ) : null}
+                </div>
               </div>
             </li>
           );

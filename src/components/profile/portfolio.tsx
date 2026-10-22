@@ -60,12 +60,8 @@ export function PortfolioList({ creatorId, isOwner = true }: PortfolioListProps)
 
   const supabase = createClient();
 
-  useEffect(() => {
-    fetchItems();
-  }, [creatorId]);
-
   async function fetchItems() {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("portfolio_items")
       .select("*")
       .eq("creator_id", creatorId)
@@ -74,6 +70,12 @@ export function PortfolioList({ creatorId, isOwner = true }: PortfolioListProps)
     if (data) setItems(data);
     setLoading(false);
   }
+
+  useEffect(() => {
+    // Carga inicial de datos del portfolio (fetch async → setState al resolver).
+    // eslint-disable-next-line react-hooks/set-state-in-effect, react-hooks/exhaustive-deps
+    fetchItems();
+  }, [creatorId]);
 
   async function handleDelete(id: string) {
     if (!confirm("¿Eliminar este item del portfolio?")) return;

@@ -48,6 +48,9 @@ const FILES = [
   { file: "tags.sql", label: "Tags para búsqueda y matchmaking" },
   { file: "campaigns-abm.sql", label: "DELETE de campañas (marcas dueñas)" },
   { file: "drop-niche.sql", label: "Eliminar columna niche (redundante con tags)" },
+  { file: "messages.sql", label: "Mensajería marca <-> creador" },
+  { file: "notifications.sql", label: "Notificaciones in-app" },
+  { file: "collaborations.sql", label: "Colaboraciones, entregas y pago simulado" },
 ];
 
 // Códigos de error de Postgres que significan "ya existe" → no es fatal

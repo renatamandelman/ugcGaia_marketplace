@@ -47,10 +47,24 @@ export async function updateProfile(prev: ProfileState, formData: FormData) {
   return { success: "Perfil actualizado." };
 }
 
+export interface ApplicationDecision {
+  error?: string;
+  success?: string;
+  conversationId?: string;
+}
+
+/**
+ * Aceptar o rechazar una postulación.
+ *
+ * Aceptar es una operación atómica en Postgres (RPC accept_application):
+ * cambia el estado, crea/reutiliza el hilo y envía el primer mensaje.
+ * Rechazar es un update simple validado contra el dueño de la campaña.
+ */
 export async function updateApplicationStatus(
   applicationId: string,
-  status: "accepted" | "rejected"
-) {
+  status: "accepted" | "rejected",
+  message = ""
+): Promise<ApplicationDecision> {
   const supabase = await createClient();
 
   const {
@@ -58,6 +72,23 @@ export async function updateApplicationStatus(
   } = await supabase.auth.getUser();
 
   if (!user) return { error: "No autorizado" };
+
+  if (status === "accepted") {
+    const { data, error } = await supabase.rpc("accept_application", {
+      p_application_id: applicationId,
+      p_message: message,
+    });
+
+    if (error) return { error: error.message };
+
+    revalidatePath("/profile");
+    revalidatePath("/dashboard");
+    revalidatePath("/messages");
+    return {
+      success: "Postulación aceptada. La conversación está abierta.",
+      conversationId: data as string,
+    };
+  }
 
   const { data: application } = await supabase
     .from("applications")
@@ -85,5 +116,6 @@ export async function updateApplicationStatus(
   if (error) return { error: error.message };
 
   revalidatePath("/profile");
-  return { success: "Postulación actualizada" };
+  revalidatePath("/dashboard");
+  return { success: "Postulación rechazada" };
 }
