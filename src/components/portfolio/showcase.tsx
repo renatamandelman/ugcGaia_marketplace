@@ -169,6 +169,8 @@ function PortfolioCard({ item }: { item: PortfolioItem }) {
           <img
             src={item.thumbnail_url}
             alt={item.title}
+            loading="lazy"
+            decoding="async"
             className="size-full object-cover"
             onError={() => setThumbFailed(true)}
           />
@@ -176,6 +178,8 @@ function PortfolioCard({ item }: { item: PortfolioItem }) {
           <img
             src={item.media_url}
             alt={item.title}
+            loading="lazy"
+            decoding="async"
             className="size-full object-cover"
             onError={() => setImgFailed(true)}
           />

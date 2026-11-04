@@ -9,10 +9,12 @@ import { BellIcon, MailIcon, MenuIcon, XIcon } from "@/components/ui/icons";
 import { cn } from "@/components/ui/utils";
 import type { User } from "@supabase/supabase-js";
 
-const publicLinks = [
+const publicLinks: NavLink[] = [
   { label: "Cómo funciona", href: "/#como-funciona" },
   { label: "Campañas", href: "/#campanas" },
 ];
+
+type NavLink = { label: string; href: string; highlight?: boolean };
 
 interface NavbarProps {
   user?: User | null;
@@ -69,18 +71,22 @@ export function Navbar({
 
   const isBrand = (user?.user_metadata?.role as string) === "brand";
 
-  const loggedInLinks = isBrand
+  const loggedInLinks: NavLink[] = isBrand
     ? [
         { label: "Panel", href: "/profile" },
         { label: "Campañas", href: "/campaigns" },
         { label: "Creadores", href: "/creators" },
         { label: "Colaboraciones", href: "/collaborations" },
+        { label: "Wallet", href: "/wallet" },
+        { label: "Premium", href: "/premium", highlight: true },
       ]
     : [
         { label: "Dashboard", href: "/dashboard" },
         { label: "Campañas", href: "/campaigns" },
         { label: "Colaboraciones", href: "/collaborations" },
         { label: "Portfolio", href: "/profile/settings" },
+        { label: "Wallet", href: "/wallet" },
+        { label: "Premium", href: "/premium", highlight: true },
       ];
 
   return (
@@ -103,7 +109,12 @@ export function Navbar({
             <Link
               key={link.href}
               href={link.href}
-              className="rounded-lg px-3 py-2 text-sm font-medium text-[#414846] transition-colors hover:bg-paper hover:text-brand-deep"
+              className={cn(
+                "rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-paper hover:text-brand-deep",
+                link.highlight
+                  ? "font-semibold text-brand-deep"
+                  : "text-[#414846]"
+              )}
             >
               {link.label}
             </Link>
@@ -177,7 +188,7 @@ export function Navbar({
       <div
         className={cn(
           "overflow-hidden border-t border-bone/60 bg-paper transition-all duration-200 md:hidden",
-          open ? "max-h-[32rem] opacity-100" : "max-h-0 opacity-0"
+          open ? "max-h-[44rem] opacity-100" : "max-h-0 opacity-0"
         )}
       >
         <nav className="flex flex-col gap-1 px-5 py-4">
@@ -186,7 +197,12 @@ export function Navbar({
               key={link.href}
               href={link.href}
               onClick={() => setOpen(false)}
-              className="rounded-lg px-3 py-2.5 text-sm font-medium text-taupe hover:bg-white"
+              className={cn(
+                "rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-white",
+                link.highlight
+                  ? "font-semibold text-brand-deep"
+                  : "text-taupe"
+              )}
             >
               {link.label}
             </Link>

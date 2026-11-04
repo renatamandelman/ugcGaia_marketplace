@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 };
 
 const PROFILE_COLUMNS =
-  "id, full_name, bio, location, avatar_url, banner_url, tags, tiktok_url, instagram_url, youtube_url";
+  "id, full_name, bio, location, avatar_url, banner_url, tags, tiktok_url, instagram_url, youtube_url, plan";
 
 export default async function CreatorsPage({
   searchParams,
@@ -61,7 +61,10 @@ export default async function CreatorsPage({
   }
 
   const { data } = await query;
-  const creators = (data ?? []).map((row) => mapProfileToCreator(row));
+  const creators = (data ?? [])
+    .map((row) => mapProfileToCreator(row))
+    // Los creadores premium aparecen primero (mismo orden relativo dentro de cada grupo).
+    .sort((a, b) => Number(b.premium) - Number(a.premium));
 
   const hasFilters = q !== "" || selectedTags.length > 0;
   const clearHref = creatorsHref({});

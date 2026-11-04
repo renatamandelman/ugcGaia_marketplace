@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { formatBudgetRange, deadlineLabel } from "@/lib/format";
 import { Avatar } from "@/components/ui/avatar";
 import { StatusBadge, CategoryBadge } from "@/components/ui/badge";
+import { PremiumBadge } from "@/components/ui/premium-badge";
 import { ApplyButton } from "@/components/apply-button";
 import { CampaignOwnerActions } from "@/components/campaigns/owner-actions";
 import {
@@ -37,7 +38,7 @@ export default async function CampaignDetailPage({
   const { data: row } = await supabase
     .from("campaigns")
     .select(
-      "id, brand_id, title, description, category, budget_min, budget_max, deliverables, deadline, status, tags, created_at, profiles(full_name)"
+      "id, brand_id, title, description, category, budget_min, budget_max, deliverables, deadline, status, tags, created_at, profiles(full_name, plan)"
     )
     .eq("id", id)
     .single();
@@ -45,8 +46,8 @@ export default async function CampaignDetailPage({
   if (!row) notFound();
 
   type BrandRelation =
-  | { full_name: string | null }
-  | { full_name: string | null }[]
+  | { full_name: string | null; plan?: string | null }
+  | { full_name: string | null; plan?: string | null }[]
   | null;
 
 function brandName(relation: BrandRelation): string {
@@ -54,9 +55,15 @@ function brandName(relation: BrandRelation): string {
   return entry?.full_name ?? "Marca";
 }
 
+function brandIsPremium(relation: BrandRelation): boolean {
+  const entry = Array.isArray(relation) ? relation[0] : relation;
+  return entry?.plan === "premium";
+}
+
 const campaign = {
     ...row,
     brand: brandName(row.profiles as BrandRelation),
+    brandPremium: brandIsPremium(row.profiles as BrandRelation),
   };
   const closed = campaign.status !== "open";
   const isOwner = user != null && campaign.brand_id === user.id;
@@ -107,8 +114,9 @@ const campaign = {
           <div className="mt-4 flex items-center gap-2.5">
             <Avatar name={campaign.brand} size="md" />
             <div>
-              <p className="text-sm font-semibold text-ink">
+              <p className="flex flex-wrap items-center gap-1.5 text-sm font-semibold text-ink">
                 {campaign.brand}
+                {campaign.brandPremium ? <PremiumBadge /> : null}
               </p>
               <p className="text-xs text-taupe">
                 Marca verificada · {campaign.category}

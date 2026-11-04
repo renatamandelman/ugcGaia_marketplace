@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { siteUrl } from "@/lib/site-url";
 
 export type UserRole = "creator" | "brand";
 
@@ -30,9 +31,6 @@ export async function signUp(prev: AuthState, formData: FormData) {
     return { error: "Indicá la industria de tu marca." };
   }
 
-  const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
@@ -43,7 +41,7 @@ export async function signUp(prev: AuthState, formData: FormData) {
         ...(industry ? { industry } : {}),
         ...(website ? { website } : {}),
       },
-      emailRedirectTo: `${siteUrl}/auth/callback`,
+      emailRedirectTo: `${siteUrl()}/auth/callback`,
     },
   });
 

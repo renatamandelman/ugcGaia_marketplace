@@ -1,10 +1,20 @@
-/* Presentation helpers for typed mock data — nothing smart, just readable */
+/* Presentation helpers de montos y fechas */
 
 export function formatBudget(value: number): string {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
     maximumFractionDigits: 0,
+  }).format(value);
+}
+
+/** Monto con centavos (recargas, movimientos de wallet). */
+export function formatMoney(value: number): string {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   }).format(value);
 }
 

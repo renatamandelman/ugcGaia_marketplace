@@ -3,6 +3,7 @@ import type { CampaignFeedItem } from "@/lib/campaigns";
 import { formatBudgetRange } from "@/lib/format";
 import { Avatar } from "@/components/ui/avatar";
 import { StatusBadge, CategoryBadge } from "@/components/ui/badge";
+import { PremiumBadge } from "@/components/ui/premium-badge";
 import { ArrowRightIcon, ClockIcon } from "@/components/ui/icons";
 import { cn } from "@/components/ui/utils";
 
@@ -59,6 +60,7 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
           <span className="text-sm font-semibold text-ink drop-shadow-sm">
             {campaign.brand ?? "Marca"}
           </span>
+          {campaign.brand_plan === "premium" ? <PremiumBadge /> : null}
         </div>
       </div>
 

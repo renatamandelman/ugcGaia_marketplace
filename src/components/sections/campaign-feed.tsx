@@ -2,7 +2,7 @@ import { Section, SectionHeading } from "@/components/ui/section";
 import { ButtonLink } from "@/components/ui/button";
 import { CampaignCard } from "@/components/campaign-card";
 import { createClient } from "@/lib/supabase/server";
-import { mapCampaignRow } from "@/lib/campaigns";
+import { mapCampaignRow, sortByPremium } from "@/lib/campaigns";
 
 export async function CampaignFeed() {
   const supabase = await createClient();
@@ -10,15 +10,17 @@ export async function CampaignFeed() {
   const { data } = await supabase
     .from("campaigns")
     .select(
-      "id, title, description, category, budget_min, budget_max, deliverables, deadline, status, created_at, profiles(full_name)"
+      "id, title, description, category, budget_min, budget_max, deliverables, deadline, status, created_at, profiles(full_name, plan)"
     )
     .eq("status", "open")
     .order("created_at", { ascending: false })
-    .limit(6);
+    .limit(24);
 
-  const campaigns = (data ?? []).map((row) =>
-    mapCampaignRow(row as never)
-  );
+  // Traemos más de 6 para que el destacado premium funcione sobre el total
+  // y recién después recortamos a las 6 que se muestran.
+  const campaigns = sortByPremium(
+    (data ?? []).map((row) => mapCampaignRow(row as never))
+  ).slice(0, 6);
 
   return (
     <Section id="campanas">

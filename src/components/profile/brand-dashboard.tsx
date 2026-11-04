@@ -3,10 +3,12 @@ import { createClient } from "@/lib/supabase/server";
 import { ButtonLink } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
 import { StatusBadge } from "@/components/ui/badge";
+import { PremiumBadge } from "@/components/ui/premium-badge";
 import { CampaignOwnerActions } from "@/components/campaigns/owner-actions";
 import { ApplicationActions } from "./application-actions";
 import { CollaborationCard } from "@/components/collaborations/collaboration-card";
 import { fetchCollaborations } from "@/lib/collaborations";
+import { isPremium } from "@/lib/premium";
 import {
   BadgeCheckIcon,
   ClockIcon,
@@ -149,16 +151,29 @@ export async function BrandDashboard() {
 
   if (!user) return null;
 
-  const [{ data: profile }, { data: campaigns }] = await Promise.all([
-    supabase.from("profiles").select("full_name").eq("id", user.id).single(),
-    supabase
-      .from("campaigns")
-      .select(
-        "id, title, status, category, budget_min, budget_max, deadline, created_at"
-      )
-      .eq("brand_id", user.id)
-      .order("created_at", { ascending: false }),
-  ]);
+  const [{ data: profile }, { data: campaigns }, { data: wallet }] =
+    await Promise.all([
+      supabase
+        .from("profiles")
+        .select("full_name, plan, premium_until")
+        .eq("id", user.id)
+        .single(),
+      supabase
+        .from("campaigns")
+        .select(
+          "id, title, status, category, budget_min, budget_max, deadline, created_at"
+        )
+        .eq("brand_id", user.id)
+        .order("created_at", { ascending: false }),
+      supabase
+        .from("wallets")
+        .select("balance")
+        .eq("user_id", user.id)
+        .maybeSingle(),
+    ]);
+
+  const balance = Number(wallet?.balance ?? 0);
+  const premium = isPremium(profile);
 
   const rows = (campaigns ?? []) as unknown as CampaignWithApplications[];
   const byCampaign = await fetchCampaignApplications(
@@ -203,8 +218,9 @@ export async function BrandDashboard() {
         <div className="pointer-events-none absolute -top-16 -right-16 size-64 rounded-full bg-mint/15 blur-3xl" />
 
         <div className="relative z-10 flex flex-col gap-1">
-          <h1 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">
+          <h1 className="flex flex-wrap items-center gap-2 text-2xl font-bold tracking-tight text-ink sm:text-3xl">
             Hola, {brandName}
+            {premium ? <PremiumBadge size="md" /> : null}
           </h1>
           <p className="text-sm text-taupe">
             Gestioná tus campañas, revisá propuestas y coordiná con creadores.
@@ -214,6 +230,30 @@ export async function BrandDashboard() {
         <div className="relative z-10 flex flex-wrap items-center gap-2.5">
           <ButtonLink href="/campaigns/new" variant="primary">
             + Nuevo brief
+          </ButtonLink>
+        </div>
+      </section>
+
+      <section className="flex flex-col gap-4 rounded-2xl border border-bone bg-paper p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3">
+          <div className="flex size-10 items-center justify-center rounded-xl bg-mint/40 text-brand">
+            <WalletIcon width={20} height={20} />
+          </div>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-taupe">
+              Saldo en wallet
+            </p>
+            <p className="text-2xl font-bold tracking-tight text-ink">
+              {formatBudget(balance)}
+            </p>
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <ButtonLink href="/wallet" variant="primary" size="sm">
+            Cargar saldo
+          </ButtonLink>
+          <ButtonLink href="/premium" variant="secondary" size="sm">
+            {premium ? "Gestionar Premium" : "Pasarme a Premium"}
           </ButtonLink>
         </div>
       </section>

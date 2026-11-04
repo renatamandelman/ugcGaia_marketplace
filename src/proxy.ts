@@ -1,7 +1,11 @@
 import { updateSession } from "@/lib/supabase/middleware";
 import type { NextRequest } from "next/server";
 
-export async function middleware(request: NextRequest) {
+/**
+ * En Next 16 el archivo `middleware.ts` fue renombrado a `proxy.ts`.
+ * Corre antes de renderizar y refresca la sesión de Supabase + protege rutas.
+ */
+export async function proxy(request: NextRequest) {
   return await updateSession(request);
 }
 

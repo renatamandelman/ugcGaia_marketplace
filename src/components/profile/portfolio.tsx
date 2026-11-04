@@ -214,6 +214,8 @@ function PortfolioItemCard({
             <img
               src={item.thumbnail_url}
               alt={item.title}
+              loading="lazy"
+              decoding="async"
               className="size-full object-cover"
             />
           ) : (
@@ -233,6 +235,8 @@ function PortfolioItemCard({
           <img
             src={item.media_url}
             alt={item.title}
+            loading="lazy"
+            decoding="async"
             className="size-full object-cover"
             onError={() => setImageFailed(true)}
           />
@@ -573,6 +577,8 @@ function PortfolioForm({
                 <img
                   src={thumbnailUrl}
                   alt="Portada"
+                  loading="lazy"
+                  decoding="async"
                   className="h-24 w-16 shrink-0 rounded-lg object-cover"
                 />
                 <div className="flex flex-col gap-2">

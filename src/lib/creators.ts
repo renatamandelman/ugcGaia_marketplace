@@ -12,6 +12,7 @@ export interface CreatorCardItem {
   tiktok_url: string | null;
   instagram_url: string | null;
   youtube_url: string | null;
+  premium: boolean;
 }
 
 export function mapProfileToCreator(
@@ -27,7 +28,7 @@ export function mapProfileToCreator(
     | "tiktok_url"
     | "instagram_url"
     | "youtube_url"
-  >
+  > & { plan?: string | null }
 ): CreatorCardItem {
   return {
     id: row.id,
@@ -40,6 +41,7 @@ export function mapProfileToCreator(
     tiktok_url: row.tiktok_url ?? null,
     instagram_url: row.instagram_url ?? null,
     youtube_url: row.youtube_url ?? null,
+    premium: row.plan === "premium",
   };
 }
 

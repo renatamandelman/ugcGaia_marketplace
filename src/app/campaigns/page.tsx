@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Section, SectionHeading } from "@/components/ui/section";
 import { CampaignsExplorer } from "@/components/campaigns-explorer";
 import { createClient } from "@/lib/supabase/server";
-import { mapCampaignRow } from "@/lib/campaigns";
+import { mapCampaignRow, sortByPremium } from "@/lib/campaigns";
 
 export const metadata: Metadata = {
   title: "Campañas activas",
@@ -32,7 +32,7 @@ export default async function CampaignsPage() {
   let query = supabase
     .from("campaigns")
     .select(
-      "id, title, description, category, budget_min, budget_max, deliverables, deadline, status, tags, created_at, profiles(full_name)"
+      "id, title, description, category, budget_min, budget_max, deliverables, deadline, status, tags, created_at, profiles(full_name, plan)"
     )
     .order("created_at", { ascending: false });
 
@@ -40,7 +40,9 @@ export default async function CampaignsPage() {
 
   const { data } = await query;
 
-  const campaigns = (data ?? []).map((row) => mapCampaignRow(row as never));
+  const campaigns = sortByPremium(
+    (data ?? []).map((row) => mapCampaignRow(row as never))
+  );
 
   return (
     <Section>

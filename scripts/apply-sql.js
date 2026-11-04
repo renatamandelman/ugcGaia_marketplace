@@ -51,6 +51,7 @@ const FILES = [
   { file: "messages.sql", label: "Mensajería marca <-> creador" },
   { file: "notifications.sql", label: "Notificaciones in-app" },
   { file: "collaborations.sql", label: "Colaboraciones, entregas y pago simulado" },
+  { file: "payments-stripe.sql", label: "Pagos con Stripe (test) + plan premium" },
 ];
 
 // Códigos de error de Postgres que significan "ya existe" → no es fatal

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { CreatorCardItem } from "@/lib/creators";
 import { Avatar } from "@/components/ui/avatar";
+import { PremiumBadge } from "@/components/ui/premium-badge";
 import {
   ArrowRightIcon,
   InstagramIcon,
@@ -30,6 +31,8 @@ export function CreatorCard({ creator }: CreatorCardProps) {
           <img
             src={creator.banner_url}
             alt=""
+            loading="lazy"
+            decoding="async"
             className="h-full w-full object-cover"
           />
         ) : null}
@@ -45,8 +48,9 @@ export function CreatorCard({ creator }: CreatorCardProps) {
       {/* Body */}
       <div className="flex flex-1 flex-col p-5 pt-9">
         <div className="flex items-start justify-between gap-2">
-          <h3 className="text-base font-semibold tracking-tight text-ink">
+          <h3 className="flex flex-wrap items-center gap-1.5 text-base font-semibold tracking-tight text-ink">
             {creator.full_name}
+            {creator.premium ? <PremiumBadge /> : null}
           </h3>
           {creator.location ? (
             <span className="mt-0.5 shrink-0 text-xs text-taupe">

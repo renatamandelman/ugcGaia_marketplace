@@ -41,6 +41,8 @@ export async function updateSession(request: NextRequest) {
     request.nextUrl.pathname.startsWith("/messages") ||
     request.nextUrl.pathname.startsWith("/notifications") ||
     request.nextUrl.pathname.startsWith("/collaborations") ||
+    request.nextUrl.pathname.startsWith("/wallet") ||
+    request.nextUrl.pathname.startsWith("/premium") ||
     request.nextUrl.pathname.endsWith("/apply");
 
   // La landing (/), el feed de campañas y los detalles son públicos

@@ -1,6 +1,7 @@
 import { ButtonLink } from "@/components/ui/button";
 import { WalletIcon } from "@/components/ui/icons";
-import { formatBudget } from "@/lib/format";
+import { cn } from "@/components/ui/utils";
+import { formatBudget, formatMoney } from "@/lib/format";
 import type { WalletTransactionKind } from "@/lib/db-types";
 
 export interface WalletActivity {
@@ -26,6 +27,14 @@ function formatDate(iso: string): string {
   });
 }
 
+const kindLabel: Record<WalletTransactionKind, string> = {
+  deposit: "Recarga con tarjeta",
+  hold: "Retenido en escrow",
+  release: "Pago liberado",
+  refund: "Devolución",
+  premium: "Suscripción Premium",
+};
+
 export function CreatorSidebar({
   balance,
   releasedTotal,
@@ -44,7 +53,7 @@ export function CreatorSidebar({
             <h3 className="text-lg font-bold text-ink">Tu wallet</h3>
           </div>
           <span className="inline-flex items-center gap-1 rounded-full bg-paper-deep px-2 py-0.5 text-xs font-bold text-brand">
-            <span className="size-1.5 rounded-full bg-brand" /> Simulado
+            <span className="size-1.5 rounded-full bg-brand" /> Stripe test
           </span>
         </div>
 
@@ -60,14 +69,19 @@ export function CreatorSidebar({
           <p className="mt-1.5 text-xs text-taupe">
             Los pagos se liberan cuando la marca aprueba tu entrega.
           </p>
-          <ButtonLink
-            href="/collaborations"
-            variant="primary"
-            size="sm"
-            className="mt-4 w-full"
-          >
-            Ver colaboraciones
-          </ButtonLink>
+          <div className="mt-4 flex flex-col gap-2">
+            <ButtonLink href="/wallet" variant="secondary" size="sm" className="w-full">
+              Cargar saldo
+            </ButtonLink>
+            <ButtonLink
+              href="/collaborations"
+              variant="ghost"
+              size="sm"
+              className="w-full"
+            >
+              Ver colaboraciones
+            </ButtonLink>
+          </div>
         </div>
 
         <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-taupe">
@@ -88,17 +102,25 @@ export function CreatorSidebar({
               >
                 <div className="min-w-0">
                   <p className="truncate text-sm font-bold leading-tight text-ink">
-                    {transaction.label}
+                    {kindLabel[transaction.kind] ?? transaction.label}
                   </p>
                   <p className="text-xs text-taupe">
                     {formatDate(transaction.date)}
                   </p>
                 </div>
                 <div className="text-right">
-                  <span className="text-sm font-bold text-brand">
-                    +{formatBudget(transaction.amount)}
+                  <span
+                    className={cn(
+                      "text-sm font-bold",
+                      transaction.amount > 0 ? "text-brand" : "text-clay"
+                    )}
+                  >
+                    {transaction.amount > 0 ? "+" : "−"}
+                    {formatMoney(Math.abs(transaction.amount))}
                   </span>
-                  <p className="text-[11px] text-taupe">Liberado</p>
+                  <p className="text-[11px] text-taupe">
+                    {transaction.amount > 0 ? "Acreditado" : "Debitado"}
+                  </p>
                 </div>
               </div>
             ))}

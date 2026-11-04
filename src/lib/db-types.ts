@@ -16,6 +16,8 @@ export interface Profile {
   tiktok_url?: string | null;
   instagram_url?: string | null;
   youtube_url?: string | null;
+  plan?: "free" | "premium" | null;
+  premium_until?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -148,7 +150,12 @@ export interface WalletRow {
   updated_at: string;
 }
 
-export type WalletTransactionKind = "hold" | "release" | "refund";
+export type WalletTransactionKind =
+  | "hold"
+  | "release"
+  | "refund"
+  | "deposit"
+  | "premium";
 
 export interface WalletTransactionRow {
   id: string;
@@ -157,6 +164,22 @@ export interface WalletTransactionRow {
   kind: WalletTransactionKind;
   amount: number;
   created_at: string;
+}
+
+export type PaymentKind = "wallet_topup" | "premium";
+export type StripePaymentStatus = "pending" | "paid" | "failed" | "expired";
+
+export interface PaymentRow {
+  id: string;
+  user_id: string;
+  stripe_session_id: string | null;
+  stripe_subscription_id: string | null;
+  kind: PaymentKind;
+  amount: number;
+  currency: string;
+  status: StripePaymentStatus;
+  created_at: string;
+  paid_at: string | null;
 }
 
 export type PortfolioPlatform = "tiktok" | "instagram" | "youtube" | "other";
