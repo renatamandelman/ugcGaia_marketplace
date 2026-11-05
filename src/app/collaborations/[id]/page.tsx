@@ -19,6 +19,8 @@ import {
 import { DeliverableUploadForm } from "@/components/collaborations/deliverable-upload-form";
 import { CollaborationReviewPanel } from "@/components/collaborations/collaboration-review-panel";
 import { CancelCollaborationButton } from "@/components/collaborations/cancel-collaboration-button";
+import { CollaborationTimeline } from "@/components/collaborations/collaboration-timeline";
+import { buildCollaborationTimeline } from "@/lib/collaboration-timeline";
 import { cn } from "@/components/ui/utils";
 import type { DeliverableRow, DeliverableStatus } from "@/lib/db-types";
 
@@ -183,6 +185,7 @@ export default async function CollaborationDetailPage({
     collaboration.brief_snapshot.title ||
     "Colaboración";
   const deliverablesList = briefDeliverableLines(collaboration);
+  const timeline = buildCollaborationTimeline(collaboration);
   const canCancel =
     isBrand &&
     collaboration.status !== "approved" &&
@@ -235,6 +238,18 @@ export default async function CollaborationDetailPage({
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_340px]">
         <div className="space-y-6">
+          <section className="rounded-2xl border border-bone bg-white p-6 shadow-sm">
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <h2 className="text-base font-semibold text-ink">Historial</h2>
+              <p className="text-xs text-taupe">
+                Fechas reales de cada paso, sin estimaciones.
+              </p>
+            </div>
+            <div className="mt-5">
+              <CollaborationTimeline steps={timeline} />
+            </div>
+          </section>
+
           <section className="rounded-2xl border border-bone bg-white p-6 shadow-sm">
             <h2 className="text-base font-semibold text-ink">Brief congelado</h2>
             <p className="mt-1 text-xs text-taupe">

@@ -1,4 +1,4 @@
-import { redirect, notFound } from "next/navigation";
+import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { PortfolioShowcase } from "@/components/portfolio/showcase";
 import { RateCards } from "@/components/portfolio/rate-cards";
@@ -165,30 +165,8 @@ export default async function PortfolioPage({ params }: PortfolioPageProps) {
       <PortfolioShowcase items={portfolioItems ?? []} isOwner={isOwner} />
 
       {/* Rate cards */}
-      <RateCards />
+      <RateCards baseRate={profile.base_rate ? Number(profile.base_rate) : null} />
     </main>
-  );
-}
-
-function MetricPill({
-  icon,
-  label,
-  value,
-  accent,
-}: {
-  icon: string;
-  label: string;
-  value: string;
-  accent?: boolean;
-}) {
-  return (
-    <div className={`flex items-center gap-3 rounded-xl border border-bone/40 p-3 ${accent ? "bg-mint/20" : "bg-paper"}`}>
-      <span className="text-lg">{icon}</span>
-      <div>
-        <p className="text-[10px] font-bold uppercase tracking-wider text-taupe">{label}</p>
-        <p className={`text-sm font-bold ${accent ? "text-brand" : "text-ink"}`}>{value}</p>
-      </div>
-    </div>
   );
 }
 

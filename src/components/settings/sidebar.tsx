@@ -11,9 +11,6 @@ interface SettingsNavProps {
 const navItems = [
   { id: "profile", icon: "👤", label: "Perfil Personal" },
   { id: "portfolio", icon: "🎬", label: "Portfolio & Media" },
-  { id: "rates", icon: "💰", label: "Rate Cards & Paquetes" },
-  { id: "social", icon: "📊", label: "Redes & Métricas" },
-  { id: "payments", icon: "💳", label: "Pagos" },
 ];
 
 export { navItems as settingsNavItems };

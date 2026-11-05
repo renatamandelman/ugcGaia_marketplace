@@ -21,6 +21,9 @@ export function ProfileSettingsForm({ profile }: ProfileSettingsFormProps) {
   const [tiktokUrl, setTiktokUrl] = useState(profile.tiktok_url || "");
   const [instagramUrl, setInstagramUrl] = useState(profile.instagram_url || "");
   const [youtubeUrl, setYoutubeUrl] = useState(profile.youtube_url || "");
+  const [baseRate, setBaseRate] = useState(
+    profile.base_rate ? String(profile.base_rate) : ""
+  );
   const [tags, setTags] = useState<string[]>(profile.tags ?? []);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -32,6 +35,13 @@ export function ProfileSettingsForm({ profile }: ProfileSettingsFormProps) {
     setSaving(true);
     setError(null);
 
+    const parsedRate = Number(baseRate.replace(",", ".").trim());
+    if (baseRate.trim() !== "" && (!Number.isFinite(parsedRate) || parsedRate <= 0)) {
+      setSaving(false);
+      setError("La tarifa base tiene que ser un número mayor a cero.");
+      return;
+    }
+
     const { error: updateError } = await supabase
       .from("profiles")
       .update({
@@ -42,6 +52,7 @@ export function ProfileSettingsForm({ profile }: ProfileSettingsFormProps) {
         avatar_url: avatarUrl || null,
         banner_url: bannerUrl || null,
         tags,
+        base_rate: baseRate.trim() === "" ? null : Math.round(parsedRate * 100) / 100,
         tiktok_url: tiktokUrl.trim() || null,
         instagram_url: instagramUrl.trim() || null,
         youtube_url: youtubeUrl.trim() || null,
@@ -70,6 +81,7 @@ export function ProfileSettingsForm({ profile }: ProfileSettingsFormProps) {
     setTiktokUrl(profile.tiktok_url || "");
     setInstagramUrl(profile.instagram_url || "");
     setYoutubeUrl(profile.youtube_url || "");
+    setBaseRate(profile.base_rate ? String(profile.base_rate) : "");
     setTags(profile.tags ?? []);
   }
 
@@ -82,7 +94,8 @@ export function ProfileSettingsForm({ profile }: ProfileSettingsFormProps) {
             Configuración del Perfil
           </h1>
           <p className="mt-1 text-sm text-taupe">
-            Gestioná cómo te ven las marcas, actualizá rate cards y curá tus mejores assets UGC.
+            Gestioná cómo te ven las marcas: tu presentación, tarifa base,
+            redes y los mejores assets de tu portfolio.
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-3">
@@ -210,7 +223,8 @@ export function ProfileSettingsForm({ profile }: ProfileSettingsFormProps) {
               placeholder="@tu-usuario"
             />
             <p className="mt-1 text-xs text-taupe">
-              Sin los links de tus redes todavía no hay URL del marketplace. Tus handles van en Redes & Métricas.
+              Sin los links de tus redes todavía no hay URL del marketplace.
+              Cargalos más abajo, en Redes Sociales.
             </p>
           </Field>
           <Field label="Ubicación">
@@ -224,6 +238,25 @@ export function ProfileSettingsForm({ profile }: ProfileSettingsFormProps) {
                 placeholder="Ciudad, País"
               />
             </div>
+          </Field>
+          <Field label="Tarifa base (USD por entregable)">
+            <div className="relative">
+              <span className="absolute left-3.5 top-2.5 text-taupe">US$</span>
+              <input
+                type="number"
+                inputMode="decimal"
+                min={1}
+                step="0.01"
+                value={baseRate}
+                onChange={(e) => setBaseRate(e.target.value)}
+                className="input-field pl-12"
+                placeholder="150"
+              />
+            </div>
+            <p className="mt-1 text-xs text-taupe">
+              Es la única tarifa que se publica en tu portfolio. Dejala vacía si
+              preferís cotizar caso por caso.
+            </p>
           </Field>
         </div>
 

@@ -18,6 +18,7 @@ export interface Profile {
   youtube_url?: string | null;
   plan?: "free" | "premium" | null;
   premium_until?: string | null;
+  base_rate?: number | null;
   created_at: string;
   updated_at: string;
 }

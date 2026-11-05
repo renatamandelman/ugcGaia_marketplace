@@ -39,40 +39,7 @@ export function SettingsClient({ profile }: SettingsClientProps) {
         {activeTab === "portfolio" && (
           <PortfolioList creatorId={profile.id} />
         )}
-        {activeTab === "rates" && <RatesPlaceholder />}
-        {activeTab === "social" && <SocialPlaceholder />}
-        {activeTab === "payments" && <PaymentsPlaceholder />}
       </section>
-    </div>
-  );
-}
-
-function RatesPlaceholder() {
-  return (
-    <div className="rounded-2xl border border-bone bg-white p-8 shadow-sm text-center">
-      <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-paper-deep text-2xl">💰</div>
-      <h2 className="mt-4 text-lg font-bold text-ink">Rate Cards & Paquetes</h2>
-      <p className="mt-2 text-sm text-taupe">Próximamente: configuración de precios y paquetes personalizados.</p>
-    </div>
-  );
-}
-
-function SocialPlaceholder() {
-  return (
-    <div className="rounded-2xl border border-bone bg-white p-8 shadow-sm text-center">
-      <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-paper-deep text-2xl">📊</div>
-      <h2 className="mt-4 text-lg font-bold text-ink">Redes & Métricas</h2>
-      <p className="mt-2 text-sm text-taupe">Próximamente: sync de TikTok, Instagram y YouTube.</p>
-    </div>
-  );
-}
-
-function PaymentsPlaceholder() {
-  return (
-    <div className="rounded-2xl border border-bone bg-white p-8 shadow-sm text-center">
-      <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-paper-deep text-2xl">💳</div>
-      <h2 className="mt-4 text-lg font-bold text-ink">Pagos</h2>
-      <p className="mt-2 text-sm text-taupe">Próximamente: configuración de cuenta bancaria y pagos.</p>
     </div>
   );
 }
