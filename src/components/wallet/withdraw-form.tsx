@@ -127,11 +127,6 @@ export function WithdrawForm({ balance }: { balance: number }) {
         {pending ? "Registrando pedido…" : "Solicitar retiro"}
       </button>
 
-      <p className="text-center text-[11px] leading-4 text-taupe">
-        Retiro simulado: se descuenta del saldo y queda pendiente de
-        acreditación. No mueve dinero real — un payout requiere Stripe Connect y
-        verificación de identidad.
-      </p>
     </form>
   );
 }

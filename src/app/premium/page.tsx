@@ -139,10 +139,7 @@ export default async function PremiumPage({
         </section>
       </div>
 
-      <p className="mx-auto mt-8 max-w-2xl text-center text-xs leading-5 text-taupe">
-        La suscripción se procesa con Stripe en modo prueba. En producción se
-        puede migrar a MercadoPago manteniendo el mismo contrato de webhook.
-      </p>
+    
     </main>
   );
 }
