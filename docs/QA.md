@@ -53,6 +53,8 @@ entorno desplegado (Vercel + Supabase).
 - [ ] Retiro mayor al saldo disponible → error de saldo insuficiente.
 - [ ] “Cancelar” un retiro pendiente devuelve el saldo y el movimiento pasa a **Cancelado**.
 - [ ] Sin sesión (`anon`), llamar `request_withdrawal` por API devuelve `permission denied`.
+- [ ] El creador **no ve** “Cargar saldo” en `/wallet`, y si invoca `startTopUp` recibe un error de rol.
+- [ ] La navbar no muestra **Wallet** en ningún rol: se entra desde el panel (marca: “Cargar saldo”; creador: “Tu wallet”).
 
 ### 5. Premium
 

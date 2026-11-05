@@ -21,7 +21,7 @@ import type {
 export const metadata: Metadata = {
   title: "Wallet",
   description:
-    "Cargá saldo con tarjeta (Stripe, modo prueba) para contratar colaboraciones con pago protegido.",
+    "Gestioná tu saldo: recargas con tarjeta (Stripe, modo prueba) y retiros de lo que cobrás como creador.",
 };
 
 const kindLabel: Record<WalletTransactionKind, string> = {
@@ -138,6 +138,7 @@ export default async function WalletPage({
   }[];
   const premium = isPremium(profile);
   const isCreator = profile?.role === "creator";
+  const isBrand = profile?.role === "brand";
   const withdrawals = (withdrawalRows ?? []) as WithdrawalRow[];
 
   return (
@@ -152,8 +153,9 @@ export default async function WalletPage({
             {premium ? <PremiumBadge size="md" /> : null}
           </h1>
           <p className="mt-1.5 max-w-xl text-sm text-taupe">
-            Cargá saldo con tarjeta en modo prueba y usalo para contratar
-            colaboraciones con pago protegido.
+            {isCreator
+              ? "Tu saldo se acredita cuando la marca aprueba la entrega. Desde acá lo retirás a tu cuenta."
+              : "Cargá saldo con tarjeta en modo prueba y usalo para contratar colaboraciones con pago protegido."}
           </p>
         </div>
         <ButtonLink href="/premium" variant="secondary" size="sm">
@@ -199,7 +201,9 @@ export default async function WalletPage({
               {formatMoney(balance)}
             </p>
             <p className="mt-1.5 text-xs text-taupe">
-              Las recargas se acreditan al confirmarse el pago en Stripe.
+              {isCreator
+                ? "Se acredita cuando la marca aprueba tu entrega."
+                : "Las recargas se acreditan al confirmarse el pago en Stripe."}
             </p>
           </div>
 
@@ -209,7 +213,9 @@ export default async function WalletPage({
 
           {rows.length === 0 ? (
             <p className="mt-3 rounded-2xl border border-dashed border-bone bg-paper p-5 text-sm text-taupe">
-              Todavía no hay movimientos. Cargá saldo para empezar.
+              {isCreator
+                ? "Todavía no hay movimientos. Cuando cobres una colaboración, la vas a ver acá."
+                : "Todavía no hay movimientos. Cargá saldo para empezar."}
             </p>
           ) : (
             <ul className="mt-3 divide-y divide-bone/60 overflow-hidden rounded-2xl border border-bone bg-white">
@@ -303,18 +309,20 @@ export default async function WalletPage({
           ) : null}
         </section>
 
-        {/* Recarga y retiro */}
+        {/* Recarga (solo marcas) y retiro (solo creadores) */}
         <section className="order-1 lg:order-2">
-          <div className="rounded-3xl border border-bone bg-white p-6 shadow-sm">
-            <h2 className="text-lg font-bold text-ink">Cargar saldo</h2>
-            <p className="mt-1 mb-5 text-xs text-taupe">
-              Pago único. Stripe Checkout en modo prueba.
-            </p>
-            <TopUpForm />
-          </div>
+          {isBrand ? (
+            <div className="rounded-3xl border border-bone bg-white p-6 shadow-sm">
+              <h2 className="text-lg font-bold text-ink">Cargar saldo</h2>
+              <p className="mt-1 mb-5 text-xs text-taupe">
+                Pago único. Stripe Checkout en modo prueba.
+              </p>
+              <TopUpForm />
+            </div>
+          ) : null}
 
           {isCreator ? (
-            <div className="mt-4 rounded-3xl border border-bone bg-white p-6 shadow-sm">
+            <div className="rounded-3xl border border-bone bg-white p-6 shadow-sm">
               <h2 className="text-lg font-bold text-ink">Retirar saldo</h2>
               <p className="mt-1 mb-5 text-xs text-taupe">
                 Pasá a tu cuenta lo que cobraste por tus entregas.
@@ -324,9 +332,9 @@ export default async function WalletPage({
           ) : null}
 
           <div className="mt-4 rounded-2xl bg-paper-deep p-4 text-xs leading-5 text-taupe">
-            El dinero queda en tu wallet. Cuando aceptás una postulación, Gaia
-            lo retiene en custodia y lo libera al creador cuando aprobás la
-            entrega (comisión de plataforma: 6%).
+            {isCreator
+              ? "El dinero entra a tu wallet cuando la marca aprueba la entrega. Gaia retiene el pago en custodia hasta ese momento (comisión de plataforma: 6%)."
+              : "El dinero queda en tu wallet. Cuando aceptás una postulación, Gaia lo retiene en custodia y lo libera al creador cuando aprobás la entrega (comisión de plataforma: 6%)."}
           </div>
         </section>
       </div>

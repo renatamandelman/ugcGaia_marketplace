@@ -51,6 +51,21 @@ export async function startTopUp(
 
   if (!user) redirect("/login");
 
+  // Solo las marcas cargan saldo: el creador cobra, no paga. Sin este
+  // chequeo, ocultar el formulario sería solo cosmético (la action se
+  // puede invocar igual desde el cliente).
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (profile?.role !== "brand") {
+    return {
+      error: "Solo las marcas pueden cargar saldo. Como creador, tu saldo entra cuando aprobás una entrega.",
+    };
+  }
+
   const stripe = getStripe();
   const base = siteUrl();
 

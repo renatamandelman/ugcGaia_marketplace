@@ -38,7 +38,7 @@ liberación de pago**, y el cobro real en modo test (recarga + premium).
 
 ## 4. Recarga de saldo con Stripe (1 min 30 s) ← **lo que pedía la consigna**
 
-- Como marca: `/wallet` → “Cargar saldo” → USD 25.
+- Como marca: desde el panel, botón **“Cargar saldo”** → `/wallet` → “Cargar saldo” → USD 25.
 - Paga con `4242 4242 4242 4242`.
 - Vuelve a `/wallet`: **saldo acreditado** y movimiento “Recarga con tarjeta”.
 
@@ -60,7 +60,7 @@ liberación de pago**, y el cobro real en modo test (recarga + premium).
 > “Acá está el modelo de negocio: Gaia cobra 6 % sobre cada colaboración
 > liberada. El dinero nunca se mueve fuera del escrow hasta la aprobación.”
 
-- Como creador: `/wallet` → panel **Retirar saldo** → alias `gaia.creador` →
+- Como creador: dashboard → “Tu wallet” → panel **Retirar saldo** → alias `gaia.creador` →
   retirar una parte del saldo liberado. Queda **Pendiente**.
 - Mostrar “Cancelar”: el saldo vuelve y el movimiento pasa a **Cancelado**.
 

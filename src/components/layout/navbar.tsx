@@ -76,7 +76,6 @@ export function Navbar({
         { label: "Panel", href: "/profile" },
         { label: "Creadores", href: "/creators" },
         { label: "Colaboraciones", href: "/collaborations" },
-        { label: "Wallet", href: "/wallet" },
         { label: "Premium", href: "/premium", highlight: true },
       ]
     : [
@@ -84,7 +83,6 @@ export function Navbar({
         { label: "Campañas", href: "/campaigns" },
         { label: "Colaboraciones", href: "/collaborations" },
         { label: "Portfolio", href: "/profile/settings" },
-        { label: "Wallet", href: "/wallet" },
         { label: "Premium", href: "/premium", highlight: true },
       ];
 
