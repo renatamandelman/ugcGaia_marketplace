@@ -70,6 +70,10 @@ liberación de pago**, y el cobro real en modo test (recarga + premium).
 > banco requiere Stripe Connect con onboarding y KYC, que es la evolución natural
 > de este módulo.”
 
+⚠️ Si preguntan por qué queda **Pendiente**: nada escribe `paid` en esta demo a
+propósito. Ese estado lo daría el worker de payout contra Stripe Connect. No
+digas que “se acredita solo”: es un flujo modelado hasta donde el riel existe.
+
 ## 6. Premium (1 min)
 
 - `/premium`: mostrar planes y beneficios.

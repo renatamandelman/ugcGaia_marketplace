@@ -305,6 +305,12 @@ export default async function WalletPage({
                   ))}
                 </ul>
               )}
+
+              <p className="mt-2.5 text-[11px] leading-4 text-taupe">
+                En esta demo la solicitud queda en <strong>Pendiente</strong>: el
+                paso a “Acreditado” lo haría el proceso de payout con Stripe
+                Connect.
+              </p>
             </div>
           ) : null}
         </section>

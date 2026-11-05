@@ -96,6 +96,11 @@ desde el balance de la plataforma. Modelamos la máquina de estados
 (`pending` → `paid` / `cancelled`) para que el flujo quede completo y auditable:
 cancelar un retiro pendiente devuelve el saldo como `refund`.
 
+**El estado final en esta demo es `pending` o `cancelled`: nada escribe `paid`.**
+Ese paso lo daría el worker de payout contra Stripe Connect, que no está
+implementado. Es una decisión explícita, no un olvido: preferimos un flujo
+incompleto pero honesto antes que simular una acreditación bancaria que no existe.
+
 **Garantías de seguridad:**
 
 - Los RPC que mueven plata (`process_wallet_topup`, `activate_premium`, `deactivate_premium`) están revocados de `PUBLIC`, `anon` y `authenticated`: **solo los puede ejecutar `service_role`**, o sea el servidor.
