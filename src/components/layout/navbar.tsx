@@ -74,7 +74,6 @@ export function Navbar({
   const loggedInLinks: NavLink[] = isBrand
     ? [
         { label: "Panel", href: "/profile" },
-        { label: "Campañas", href: "/campaigns" },
         { label: "Creadores", href: "/creators" },
         { label: "Colaboraciones", href: "/collaborations" },
         { label: "Wallet", href: "/wallet" },
@@ -119,11 +118,6 @@ export function Navbar({
               {link.label}
             </Link>
           ))}
-          {isBrand ? (
-            <ButtonLink href="/campaigns/new" variant="ghost" size="sm">
-              Publicar brief
-            </ButtonLink>
-          ) : null}
         </nav>
 
         <div className="hidden items-center gap-2.5 md:flex">
@@ -237,11 +231,6 @@ export function Navbar({
                 >
                   Mi perfil
                 </ButtonLink>
-                {isBrand ? (
-                  <ButtonLink href="/campaigns/new" variant="ghost" size="sm">
-                    Publicar brief
-                  </ButtonLink>
-                ) : null}
                 <button
                   type="button"
                   disabled={signingOut}

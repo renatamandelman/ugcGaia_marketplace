@@ -2,13 +2,21 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { TopUpForm } from "@/components/wallet/topup-form";
+import { WithdrawForm } from "@/components/wallet/withdraw-form";
+import { cancelWithdrawal } from "@/app/wallet/actions";
 import { ButtonLink } from "@/components/ui/button";
 import { PremiumBadge } from "@/components/ui/premium-badge";
+import { cn } from "@/components/ui/utils";
 import { formatMoney } from "@/lib/format";
 import { isPremium } from "@/lib/premium";
 import { syncCheckoutSession } from "@/lib/payments";
+import { maskDestination } from "@/lib/wallet";
 import { WalletIcon } from "@/components/ui/icons";
-import type { WalletTransactionKind } from "@/lib/db-types";
+import type {
+  WalletTransactionKind,
+  WithdrawalRow,
+  WithdrawalStatus,
+} from "@/lib/db-types";
 
 export const metadata: Metadata = {
   title: "Wallet",
@@ -22,6 +30,7 @@ const kindLabel: Record<WalletTransactionKind, string> = {
   release: "Pago liberado",
   refund: "Devolución",
   premium: "Suscripción Premium",
+  withdrawal: "Retiro solicitado",
 };
 
 const kindTone: Record<WalletTransactionKind, string> = {
@@ -30,6 +39,19 @@ const kindTone: Record<WalletTransactionKind, string> = {
   release: "text-brand",
   refund: "text-brand",
   premium: "text-clay",
+  withdrawal: "text-clay",
+};
+
+const withdrawalStatusLabel: Record<WithdrawalStatus, string> = {
+  pending: "Pendiente",
+  paid: "Acreditado",
+  cancelled: "Cancelado",
+};
+
+const withdrawalStatusTone: Record<WithdrawalStatus, string> = {
+  pending: "bg-gold/25 text-ink",
+  paid: "bg-brand/10 text-brand",
+  cancelled: "bg-paper-deep text-taupe",
 };
 
 function formatDate(iso: string): string {
@@ -57,6 +79,8 @@ export default async function WalletPage({
   const sessionId =
     typeof params.session_id === "string" ? params.session_id : null;
   const canceled = params.canceled === "1";
+  const withdrawError =
+    typeof params.withdrawError === "string" ? params.withdrawError : null;
 
   // Fallback del webhook: si volvemos de Stripe y el webhook no llegó
   // (típico en local), acreditamos acá de forma idempotente.
@@ -75,25 +99,35 @@ export default async function WalletPage({
     }
   }
 
-  const [{ data: profile }, { data: wallet }, { data: transactions }] =
-    await Promise.all([
-      supabase
-        .from("profiles")
-        .select("full_name, role, plan, premium_until")
-        .eq("id", user.id)
-        .maybeSingle(),
-      supabase
-        .from("wallets")
-        .select("balance")
-        .eq("user_id", user.id)
-        .maybeSingle(),
-      supabase
-        .from("wallet_transactions")
-        .select("id, kind, amount, created_at")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false })
-        .limit(20),
-    ]);
+  const [
+    { data: profile },
+    { data: wallet },
+    { data: transactions },
+    { data: withdrawalRows },
+  ] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("full_name, role, plan, premium_until")
+      .eq("id", user.id)
+      .maybeSingle(),
+    supabase
+      .from("wallets")
+      .select("balance")
+      .eq("user_id", user.id)
+      .maybeSingle(),
+    supabase
+      .from("wallet_transactions")
+      .select("id, kind, amount, created_at")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(20),
+    supabase
+      .from("withdrawals")
+      .select("id, amount, method, destination, status, created_at")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(5),
+  ]);
 
   const balance = Number(wallet?.balance ?? 0);
   const rows = (transactions ?? []) as {
@@ -103,6 +137,8 @@ export default async function WalletPage({
     created_at: string;
   }[];
   const premium = isPremium(profile);
+  const isCreator = profile?.role === "creator";
+  const withdrawals = (withdrawalRows ?? []) as WithdrawalRow[];
 
   return (
     <main className="mx-auto w-full max-w-5xl px-5 py-10 sm:px-8 sm:py-14">
@@ -140,6 +176,12 @@ export default async function WalletPage({
       {syncError ? (
         <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3.5 text-sm font-medium text-red-700">
           El pago se registró en Stripe pero no pudimos acreditarlo: {syncError}
+        </div>
+      ) : null}
+
+      {withdrawError ? (
+        <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3.5 text-sm font-medium text-red-700">
+          No pudimos procesar el retiro: {withdrawError}
         </div>
       ) : null}
 
@@ -199,9 +241,69 @@ export default async function WalletPage({
               })}
             </ul>
           )}
+
+          {isCreator ? (
+            <div className="mt-8">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-taupe">
+                Retiros
+              </h2>
+
+              {withdrawals.length === 0 ? (
+                <p className="mt-3 rounded-2xl border border-dashed border-bone bg-paper p-5 text-sm text-taupe">
+                  Todavía no pediste retiros. Lo que cobrás por tus entregas se
+                  acredita en tu saldo y lo podés retirar cuando quieras.
+                </p>
+              ) : (
+                <ul className="mt-3 divide-y divide-bone/60 overflow-hidden rounded-2xl border border-bone bg-white">
+                  {withdrawals.map((withdrawal) => (
+                    <li
+                      key={withdrawal.id}
+                      className="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5"
+                    >
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-ink">
+                          {formatMoney(Number(withdrawal.amount))} ·{" "}
+                          {withdrawal.method === "cbu" ? "CBU/CVU" : "Alias"}{" "}
+                          {maskDestination(withdrawal.destination)}
+                        </p>
+                        <p className="text-xs text-taupe">
+                          {formatDate(withdrawal.created_at)}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={cn(
+                            "rounded-full px-2.5 py-1 text-[11px] font-bold",
+                            withdrawalStatusTone[withdrawal.status]
+                          )}
+                        >
+                          {withdrawalStatusLabel[withdrawal.status]}
+                        </span>
+                        {withdrawal.status === "pending" ? (
+                          <form action={cancelWithdrawal}>
+                            <input
+                              type="hidden"
+                              name="id"
+                              value={withdrawal.id}
+                            />
+                            <button
+                              type="submit"
+                              className="rounded-lg px-2.5 py-1 text-[11px] font-semibold text-taupe underline-offset-2 transition-colors hover:text-ink hover:underline"
+                            >
+                              Cancelar
+                            </button>
+                          </form>
+                        ) : null}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ) : null}
         </section>
 
-        {/* Formulario de recarga */}
+        {/* Recarga y retiro */}
         <section className="order-1 lg:order-2">
           <div className="rounded-3xl border border-bone bg-white p-6 shadow-sm">
             <h2 className="text-lg font-bold text-ink">Cargar saldo</h2>
@@ -210,6 +312,16 @@ export default async function WalletPage({
             </p>
             <TopUpForm />
           </div>
+
+          {isCreator ? (
+            <div className="mt-4 rounded-3xl border border-bone bg-white p-6 shadow-sm">
+              <h2 className="text-lg font-bold text-ink">Retirar saldo</h2>
+              <p className="mt-1 mb-5 text-xs text-taupe">
+                Pasá a tu cuenta lo que cobraste por tus entregas.
+              </p>
+              <WithdrawForm balance={balance} />
+            </div>
+          ) : null}
 
           <div className="mt-4 rounded-2xl bg-paper-deep p-4 text-xs leading-5 text-taupe">
             El dinero queda en tu wallet. Cuando aceptás una postulación, Gaia

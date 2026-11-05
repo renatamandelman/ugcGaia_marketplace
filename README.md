@@ -82,11 +82,24 @@ Marca aprueba entrega                 Liberación
 ────────────────────►   creator_amount = monto − 6% comisión
                         wallet_transactions.kind = 'release'
                         collaborations.payment_status = 'released'
+
+Creador pide retiro                   Retiro (simulado)
+───────────────────►   wallets.balance -= monto
+                       withdrawals.status = 'pending'
+                       wallet_transactions.kind = 'withdrawal'
 ```
+
+El retiro es **simulado a propósito**: mueve el saldo y registra una solicitud
+pendiente con CBU/alias, pero no transfiere dinero real. Un payout de verdad
+necesita **Stripe Connect** (cuentas Express + onboarding + KYC) y transferencias
+desde el balance de la plataforma. Modelamos la máquina de estados
+(`pending` → `paid` / `cancelled`) para que el flujo quede completo y auditable:
+cancelar un retiro pendiente devuelve el saldo como `refund`.
 
 **Garantías de seguridad:**
 
 - Los RPC que mueven plata (`process_wallet_topup`, `activate_premium`, `deactivate_premium`) están revocados de `PUBLIC`, `anon` y `authenticated`: **solo los puede ejecutar `service_role`**, o sea el servidor.
+- `request_withdrawal` y `cancel_withdrawal` sí los llama el usuario, pero usan `auth.uid()` adentro con `security definer`, y están revocados de `PUBLIC` y `anon`: **un visitante sin sesión recibe `permission denied`**. El descuento se hace con `SELECT ... FOR UPDATE`, así que dos submits simultáneos no pueden dejar el saldo en negativo.
 - Son **idempotentes** por `stripe_session_id`: si Stripe reintenta el webhook, no se acredita dos veces.
 - El webhook valida la firma con `STRIPE_WEBHOOK_SECRET` y corre en runtime Node.
 - RLS activo en todas las tablas: cada usuario ve solo sus datos.
@@ -125,7 +138,7 @@ Cancelación: el evento `customer.subscription.deleted` devuelve la cuenta a `fr
 | `/collaborations/[id]` | Contrato, entregas, historial y liberación de pago |
 | `/messages` | Mensajería marca ↔ creador |
 | `/notifications` | Notificaciones in-app |
-| `/wallet` | Recarga de saldo con Stripe (test) + movimientos |
+| `/wallet` | Recarga con Stripe (test), saldo, movimientos y retiro del creador |
 | `/premium` | Planes y suscripción Premium |
 | `/login`, `/register` | Autenticación |
 | `/api/stripe/webhook` | Webhook de Stripe |

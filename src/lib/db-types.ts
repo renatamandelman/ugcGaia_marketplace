@@ -155,7 +155,22 @@ export type WalletTransactionKind =
   | "release"
   | "refund"
   | "deposit"
-  | "premium";
+  | "premium"
+  | "withdrawal";
+
+export type WithdrawalMethod = "cbu" | "alias";
+export type WithdrawalStatus = "pending" | "paid" | "cancelled";
+
+export interface WithdrawalRow {
+  id: string;
+  user_id: string;
+  amount: number;
+  method: WithdrawalMethod;
+  destination: string;
+  status: WithdrawalStatus;
+  created_at: string;
+  settled_at: string | null;
+}
 
 export interface WalletTransactionRow {
   id: string;

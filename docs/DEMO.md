@@ -60,6 +60,16 @@ liberación de pago**, y el cobro real en modo test (recarga + premium).
 > “Acá está el modelo de negocio: Gaia cobra 6 % sobre cada colaboración
 > liberada. El dinero nunca se mueve fuera del escrow hasta la aprobación.”
 
+- Como creador: `/wallet` → panel **Retirar saldo** → alias `gaia.creador` →
+  retirar una parte del saldo liberado. Queda **Pendiente**.
+- Mostrar “Cancelar”: el saldo vuelve y el movimiento pasa a **Cancelado**.
+
+> “El creador cobra en su wallet al aprobarse la entrega y lo retira desde acá.
+> El retiro está modelado con máquina de estados (`pending` → `paid` / `cancelled`)
+> y descuento atómico con `FOR UPDATE`. Está **simulado**: un payout real a un
+> banco requiere Stripe Connect con onboarding y KYC, que es la evolución natural
+> de este módulo.”
+
 ## 6. Premium (1 min)
 
 - `/premium`: mostrar planes y beneficios.

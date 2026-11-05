@@ -1,10 +1,11 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getStripe, isStripeConfigured } from "@/lib/stripe";
 import { siteUrl } from "@/lib/site-url";
-import { WALLET_MAX_USD, WALLET_MIN_USD } from "@/lib/wallet";
+import { WALLET_MAX_USD, WALLET_MIN_USD, WITHDRAW_MIN_USD } from "@/lib/wallet";
 
 export interface TopUpState {
   error?: string;
@@ -83,4 +84,96 @@ export async function startTopUp(
   }
 
   redirect(session.url);
+}
+
+export interface WithdrawalState {
+  error?: string;
+  ok?: string;
+}
+
+/**
+ * Solicita un retiro del saldo del creador (simulado).
+ *
+ * El descuento y la validación de saldo viven en el RPC
+ * `request_withdrawal` (security definer, con FOR UPDATE): acá solo
+ * parseamos el formulario. Si validáramos únicamente en el cliente,
+ * un doble submit podría dejar el saldo en negativo.
+ */
+export async function requestWithdrawal(
+  _prev: WithdrawalState,
+  formData: FormData
+): Promise<WithdrawalState> {
+  const rawAmount = String(formData.get("amount") ?? "")
+    .replace(",", ".")
+    .trim();
+  const amount = Math.round(Number(rawAmount) * 100) / 100;
+  const method = String(formData.get("method") ?? "cbu");
+  const destination = String(formData.get("destination") ?? "").trim();
+
+  if (!Number.isFinite(amount) || amount <= 0) {
+    return { error: "Ingresá un monto válido." };
+  }
+
+  if (amount < WITHDRAW_MIN_USD) {
+    return { error: `El retiro mínimo es USD ${WITHDRAW_MIN_USD}.` };
+  }
+
+  if (method !== "cbu" && method !== "alias") {
+    return { error: "Elegí CBU/CVU o alias como destino." };
+  }
+
+  if (method === "cbu" && !/^\d{22}$/.test(destination)) {
+    return { error: "El CBU/CVU tiene que tener exactamente 22 dígitos." };
+  }
+
+  if (method === "alias" && !/^[a-zA-Z0-9.\-]{6,20}$/.test(destination)) {
+    return {
+      error:
+        "El alias tiene que tener entre 6 y 20 caracteres: letras, números, punto o guión.",
+    };
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) redirect("/login");
+
+  const { error } = await supabase.rpc("request_withdrawal", {
+    p_amount: amount,
+    p_method: method,
+    p_destination: destination,
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  revalidatePath("/wallet");
+
+  return {
+    ok: `Pedido de retiro por USD ${amount.toFixed(2)} registrado. Queda pendiente de acreditación.`,
+  };
+}
+
+/** Cancela un retiro pendiente y devuelve el saldo al wallet. */
+export async function cancelWithdrawal(formData: FormData): Promise<void> {
+  const id = String(formData.get("id") ?? "");
+  if (!id) return;
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) redirect("/login");
+
+  const { error } = await supabase.rpc("cancel_withdrawal", { p_id: id });
+
+  if (error) {
+    redirect(`/wallet?withdrawError=${encodeURIComponent(error.message)}`);
+  }
+
+  revalidatePath("/wallet");
 }

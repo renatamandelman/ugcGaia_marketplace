@@ -33,6 +33,7 @@ const kindLabel: Record<WalletTransactionKind, string> = {
   release: "Pago liberado",
   refund: "Devolución",
   premium: "Suscripción Premium",
+  withdrawal: "Retiro solicitado",
 };
 
 export function CreatorSidebar({

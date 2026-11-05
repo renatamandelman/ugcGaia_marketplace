@@ -47,6 +47,12 @@ entorno desplegado (Vercel + Supabase).
 - [ ] Marca acepta una postulación → se descuenta el saldo y queda `held`.
 - [ ] Marca aprueba la entrega → el creador recibe `monto − 6%` como `release`.
 - [ ] Cancelar una colaboración devuelve el dinero a la wallet de la marca (`refund`).
+- [ ] El creador con saldo ve el panel **Retirar saldo** en `/wallet` (la marca no lo ve).
+- [ ] Retiro con alias válido → se descuenta el saldo, aparece “Retiro solicitado” y la solicitud queda **Pendiente**.
+- [ ] Retiro con CBU de 5 dígitos → error de validación, sin tocar el saldo.
+- [ ] Retiro mayor al saldo disponible → error de saldo insuficiente.
+- [ ] “Cancelar” un retiro pendiente devuelve el saldo y el movimiento pasa a **Cancelado**.
+- [ ] Sin sesión (`anon`), llamar `request_withdrawal` por API devuelve `permission denied`.
 
 ### 5. Premium
 
