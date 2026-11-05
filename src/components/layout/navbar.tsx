@@ -82,7 +82,6 @@ export function Navbar({
         { label: "Dashboard", href: "/dashboard" },
         { label: "Campañas", href: "/campaigns" },
         { label: "Colaboraciones", href: "/collaborations" },
-        { label: "Portfolio", href: "/profile/settings" },
         { label: "Premium", href: "/premium", highlight: true },
       ];
 

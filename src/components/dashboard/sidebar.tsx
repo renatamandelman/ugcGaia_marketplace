@@ -72,7 +72,7 @@ export function CreatorSidebar({
           </p>
           <div className="mt-4 flex flex-col gap-2">
             <ButtonLink href="/wallet" variant="secondary" size="sm" className="w-full">
-              Cargar saldo
+              Retirar saldo
             </ButtonLink>
             <ButtonLink
               href="/collaborations"
