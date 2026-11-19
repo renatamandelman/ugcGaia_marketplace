@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import type { CampaignFeedItem } from "@/lib/campaigns";
 import { CampaignCard } from "@/components/campaign-card";
 import { SearchIcon } from "@/components/ui/icons";
-import { cn } from "@/components/ui/utils";
+import { filterChipClasses, filterLabel } from "@/components/ui/filter-chip";
 
 interface CampaignsExplorerProps {
   campaigns: CampaignFeedItem[];
@@ -15,13 +15,16 @@ export function CampaignsExplorer({ campaigns }: CampaignsExplorerProps) {
     () => ["Todas", ...new Set(campaigns.map((campaign) => campaign.category))],
     [campaigns]
   );
-  const allTags = useMemo(
-    () =>
-      [...new Set(campaigns.flatMap((campaign) => campaign.tags))].sort(
-        (a, b) => a.localeCompare(b)
-      ),
-    [campaigns]
-  );
+  // Los tags que repiten una categoría (ej: "food" y "Food") no se muestran:
+  // ya se filtran con el chip de la categoría.
+  const allTags = useMemo(() => {
+    const categoryNames = new Set(
+      campaigns.map((campaign) => campaign.category.toLowerCase())
+    );
+    return [...new Set(campaigns.flatMap((campaign) => campaign.tags))]
+      .filter((tag) => !categoryNames.has(tag))
+      .sort((a, b) => a.localeCompare(b));
+  }, [campaigns]);
 
   const [active, setActive] = useState("Todas");
   const [query, setQuery] = useState("");
@@ -78,12 +81,7 @@ export function CampaignsExplorer({ campaigns }: CampaignsExplorerProps) {
             key={category}
             type="button"
             onClick={() => setActive(category)}
-            className={cn(
-              "rounded-full px-4 py-2 text-sm font-medium transition-colors",
-              active === category
-                ? "bg-brand text-white shadow-sm shadow-brand/25"
-                : "bg-white text-taupe ring-1 ring-inset ring-brand/45 hover:bg-brand/10"
-            )}
+            className={filterChipClasses(active === category)}
           >
             {category}
           </button>
@@ -92,20 +90,16 @@ export function CampaignsExplorer({ campaigns }: CampaignsExplorerProps) {
 
       {/* Filtro por tags */}
       {allTags.length > 0 && (
-        <div className="mt-4 flex flex-wrap items-center justify-center gap-1.5">
+        <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
           {allTags.map((tag) => (
             <button
               key={tag}
               type="button"
               onClick={() => toggleTag(tag)}
-              className={cn(
-                "rounded-full px-3 py-1 text-xs font-semibold transition-colors",
-                selectedTags.includes(tag)
-                  ? "bg-ink text-white"
-                  : "bg-brand/10 text-brand hover:bg-brand/20"
-              )}
+              className={filterChipClasses(selectedTags.includes(tag))}
+              aria-pressed={selectedTags.includes(tag)}
             >
-              #{tag}
+              {filterLabel(tag)}
             </button>
           ))}
         </div>

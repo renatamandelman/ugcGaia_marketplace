@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Avatar } from "@/components/ui/avatar";
-import { formatBudget } from "@/lib/format";
+import { formatBudget, formatDeadlineDate } from "@/lib/format";
 import {
   MAX_VERSIONS,
   collaborationStatusLabel,
@@ -60,10 +60,7 @@ export function PaymentStatusBadge({ status }: { status: PaymentStatus }) {
 
 function formatShortDate(iso: string | null): string {
   if (!iso) return "Sin fecha";
-  return new Date(iso).toLocaleDateString("es-AR", {
-    day: "numeric",
-    month: "short",
-  });
+  return formatDeadlineDate(iso);
 }
 
 export function CollaborationCard({

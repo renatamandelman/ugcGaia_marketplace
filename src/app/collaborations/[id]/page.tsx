@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Avatar } from "@/components/ui/avatar";
-import { formatBudget } from "@/lib/format";
+import { formatBudget, formatDeadlineDate } from "@/lib/format";
 import {
   MAX_VERSIONS,
   canReviewDeliverable,
@@ -292,7 +292,7 @@ export default async function CollaborationDetailPage({
               <div>
                 <dt className="text-xs text-taupe">Fecha de entrega</dt>
                 <dd className="font-medium text-ink">
-                  {formatDate(collaboration.deadline)}
+                  {collaboration.deadline ? formatDeadlineDate(collaboration.deadline) : "Sin fecha"}
                 </dd>
               </div>
               <div>

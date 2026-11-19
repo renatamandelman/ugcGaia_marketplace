@@ -21,7 +21,7 @@ export default async function EditCampaignPage({
   const { data: campaign } = await supabase
     .from("campaigns")
     .select(
-      "id, brand_id, title, description, category, budget_min, budget_max, deliverables, deadline, status, tags"
+      "id, brand_id, title, description, category, budget_min, budget_max, deliverables, deadline, status, tags, image_url"
     )
     .eq("id", id)
     .single();
@@ -41,6 +41,7 @@ export default async function EditCampaignPage({
 
       <div className="mt-8 rounded-2xl border border-bone bg-white p-6 sm:p-8">
         <CampaignForm
+          userId={user.id}
           campaign={{
             id: campaign.id,
             title: campaign.title,
@@ -52,6 +53,7 @@ export default async function EditCampaignPage({
             deadline: campaign.deadline ?? null,
             status: campaign.status,
             tags: campaign.tags ?? [],
+            image_url: campaign.image_url ?? null,
           }}
         />
       </div>

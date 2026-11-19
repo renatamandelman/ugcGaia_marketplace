@@ -5,7 +5,7 @@ import {
   collaborationStatusLabel,
   type CollaborationListItem,
 } from "@/lib/collaborations";
-import { formatBudget } from "@/lib/format";
+import { formatBudget, formatDeadlineDate } from "@/lib/format";
 import type { CollaborationStatus } from "@/lib/db-types";
 
 const progressByStatus: Record<CollaborationStatus, number> = {
@@ -26,10 +26,7 @@ const milestoneByStatus: Record<CollaborationStatus, string> = {
 
 function formatDeadline(iso: string | null): string {
   if (!iso) return "Sin fecha";
-  return new Date(iso).toLocaleDateString("es-AR", {
-    day: "numeric",
-    month: "short",
-  });
+  return formatDeadlineDate(iso);
 }
 
 function actionFor(collaboration: CollaborationListItem): {

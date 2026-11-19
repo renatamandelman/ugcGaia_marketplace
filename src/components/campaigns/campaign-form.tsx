@@ -1,10 +1,12 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { createCampaign, updateCampaign } from "@/app/campaigns/actions";
 import { buttonClasses } from "@/components/ui/button";
 import { TagsInput } from "@/components/ui/tags-input";
+import { ImageUploader } from "@/components/ui/image-uploader";
 import { cn } from "@/components/ui/utils";
+import { formatDeadlineDate } from "@/lib/format";
 
 const inputClasses =
   "h-11 rounded-xl border border-bone bg-paper px-4 text-sm text-ink outline-none transition-colors focus:border-brand focus:ring-2 focus:ring-brand/20";
@@ -41,14 +43,21 @@ export interface CampaignFormInitial {
   deadline: string | null;
   status: "open" | "filled" | "closed";
   tags: string[];
+  image_url: string | null;
 }
 
 interface CampaignFormProps {
   /** Si se pasa, el formulario edita esa campaña en vez de crear una nueva. */
   campaign?: CampaignFormInitial;
+  /** Para nombrar el archivo de la imagen en Storage. */
+  userId: string;
 }
 
-export function CampaignForm({ campaign }: CampaignFormProps) {
+export function CampaignForm({ campaign, userId }: CampaignFormProps) {
+  const [imageUrl, setImageUrl] = useState(campaign?.image_url ?? "");
+  const [deadline, setDeadline] = useState(
+    formatDeadlineDate(campaign?.deadline)
+  );
   const action = campaign ? updateCampaign : createCampaign;
   const [state, formAction, pending] = useActionState(action, {
     error: "",
@@ -68,6 +77,52 @@ export function CampaignForm({ campaign }: CampaignFormProps) {
           className={inputClasses}
         />
       </label>
+
+      <div className="flex flex-col gap-1.5">
+        <span className="text-sm font-medium text-ink">
+          Imagen del brief <span className="font-normal text-taupe">(opcional)</span>
+        </span>
+        <input type="hidden" name="imageUrl" value={imageUrl} />
+        {imageUrl ? (
+          <div className="relative overflow-hidden rounded-xl border border-bone bg-paper-deep">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={imageUrl}
+              alt="Imagen del brief"
+              className="h-48 w-full object-cover"
+            />
+            <div className="absolute right-3 top-3 flex items-start gap-2">
+              <ImageUploader
+                label="Cambiar"
+                userId={userId}
+                folder="campaigns"
+                onUploaded={setImageUrl}
+                variant="pill"
+              />
+              <button
+                type="button"
+                onClick={() => setImageUrl("")}
+                className="rounded-full border border-white/70 bg-white/90 px-2 py-1 text-xs font-semibold text-red-600 shadow-sm transition-colors hover:bg-white"
+              >
+                Quitar
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-bone bg-paper px-4 py-6 text-center">
+            <ImageUploader
+              label="Subir imagen"
+              userId={userId}
+              folder="campaigns"
+              onUploaded={setImageUrl}
+              variant="solid"
+            />
+            <span className="text-xs text-taupe">
+              Foto del producto o referencia visual. JPG, PNG o WebP hasta 5MB.
+            </span>
+          </div>
+        )}
+      </div>
 
       <label className="flex flex-col gap-1.5">
         <span className="text-sm font-medium text-ink">Descripción</span>
@@ -103,8 +158,13 @@ export function CampaignForm({ campaign }: CampaignFormProps) {
           <span className="text-sm font-medium text-ink">Deadline</span>
           <input
             name="deadline"
-            type="date"
-            defaultValue={campaign?.deadline ?? ""}
+            type="text"
+            inputMode="numeric"
+            autoComplete="off"
+            value={deadline}
+            onChange={(e) => setDeadline(maskDeadline(e.target.value))}
+            placeholder="DD/MM/AA"
+            maxLength={8}
             className={inputClasses}
           />
         </label>
@@ -208,4 +268,12 @@ export function CampaignForm({ campaign }: CampaignFormProps) {
       </div>
     </form>
   );
+}
+
+/** Máscara DD/MM/AA: deja solo dígitos e inserta las barras al tipear. */
+function maskDeadline(value: string): string {
+  const digits = value.replace(/\D/g, "").slice(0, 6);
+  if (digits.length <= 2) return digits;
+  if (digits.length <= 4) return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+  return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
 }

@@ -33,7 +33,7 @@ export default async function NewCampaignPage() {
       </p>
 
       <div className="mt-8 rounded-2xl border border-bone bg-white p-6 sm:p-8">
-        <CampaignForm />
+        <CampaignForm userId={user.id} />
       </div>
     </div>
   );

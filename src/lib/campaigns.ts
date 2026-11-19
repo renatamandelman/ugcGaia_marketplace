@@ -8,19 +8,23 @@ export interface CampaignFeedItem {
   category: string;
   brand: string | null;
   brand_plan: "free" | "premium" | null;
+  brand_avatar: string | null;
   budget_min: number;
   budget_max: number | null;
   deliverables: string | null;
   deadline: string | null;
   status: CampaignRow["status"];
   tags: string[];
+  image_url: string | null;
   created_at: string;
 }
 
-type BrandRelation =
-  | { full_name: string | null; plan?: string | null }
-  | { full_name: string | null; plan?: string | null }[]
-  | null;
+type BrandEntry = {
+  full_name: string | null;
+  plan?: string | null;
+  avatar_url?: string | null;
+};
+type BrandRelation = BrandEntry | BrandEntry[] | null;
 
 function brandEntry(relation: BrandRelation) {
   return Array.isArray(relation) ? (relation[0] ?? null) : relation;
@@ -37,12 +41,14 @@ export function mapCampaignRow(
     category: row.category,
     brand: brand?.full_name ?? null,
     brand_plan: brand?.plan === "premium" ? "premium" : "free",
+    brand_avatar: brand?.avatar_url ?? null,
     budget_min: Number(row.budget_min),
     budget_max: row.budget_max != null ? Number(row.budget_max) : null,
     deliverables: row.deliverables ?? null,
     deadline: row.deadline ?? null,
     status: row.status,
     tags: row.tags ?? [],
+    image_url: row.image_url ?? null,
     created_at: row.created_at,
   };
 }

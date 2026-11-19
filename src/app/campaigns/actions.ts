@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { parseTags } from "@/lib/tags";
+import { parseDeadlineInput } from "@/lib/format";
 
 export async function applyToCampaign(campaignId: string) {
   const supabase = await createClient();
@@ -63,6 +64,12 @@ export interface CampaignFormState {
   error?: string;
 }
 
+/** La imagen es opcional; solo aceptamos URLs http(s) (las genera el uploader). */
+function parseImageUrl(raw: FormDataEntryValue | null): string | null {
+  const value = String(raw ?? "").trim();
+  return /^https?:\/\//i.test(value) ? value : null;
+}
+
 export async function createCampaign(
   prev: CampaignFormState,
   formData: FormData
@@ -93,14 +100,19 @@ export async function createCampaign(
   const deliverables = String(formData.get("deliverables") ?? "");
   const deadlineRaw = String(formData.get("deadline") ?? "");
   const tags = parseTags(formData.get("tags"));
+  const imageUrl = parseImageUrl(formData.get("imageUrl"));
 
   if (!title || !description || !category || !budgetMin) {
     return { error: "Completá los campos obligatorios." };
   }
 
+  const deadline = deadlineRaw.trim() ? parseDeadlineInput(deadlineRaw) : null;
+  if (deadlineRaw.trim() && !deadline) {
+    return { error: "El deadline tiene que tener el formato DD/MM/AA (ej: 25/12/26)." };
+  }
+
   const budgetMax =
     budgetMaxRaw && budgetMaxRaw !== "" ? Number(budgetMaxRaw) : null;
-  const deadline = deadlineRaw ? new Date(deadlineRaw).toISOString() : null;
 
   const { error } = await supabase
     .from("campaigns")
@@ -112,8 +124,9 @@ export async function createCampaign(
       budget_min: budgetMin,
       budget_max: budgetMax,
       deliverables: deliverables || null,
-      deadline: deadline ? deadline.slice(0, 10) : null,
+      deadline,
       tags,
+      image_url: imageUrl,
       status: "open",
     });
 
@@ -171,9 +184,15 @@ export async function updateCampaign(
   const deadlineRaw = String(formData.get("deadline") ?? "");
   const statusRaw = String(formData.get("status") ?? "open");
   const tags = parseTags(formData.get("tags"));
+  const imageUrl = parseImageUrl(formData.get("imageUrl"));
 
   if (!title || !description || !category || !budgetMin) {
     return { error: "Completá los campos obligatorios." };
+  }
+
+  const deadline = deadlineRaw.trim() ? parseDeadlineInput(deadlineRaw) : null;
+  if (deadlineRaw.trim() && !deadline) {
+    return { error: "El deadline tiene que tener el formato DD/MM/AA (ej: 25/12/26)." };
   }
 
   const status = ["open", "filled", "closed"].includes(statusRaw)
@@ -181,7 +200,6 @@ export async function updateCampaign(
     : "open";
   const budgetMax =
     budgetMaxRaw && budgetMaxRaw !== "" ? Number(budgetMaxRaw) : null;
-  const deadline = deadlineRaw ? new Date(deadlineRaw).toISOString() : null;
 
   const { error } = await supabase
     .from("campaigns")
@@ -192,9 +210,10 @@ export async function updateCampaign(
       budget_min: budgetMin,
       budget_max: budgetMax,
       deliverables: deliverables || null,
-      deadline: deadline ? deadline.slice(0, 10) : null,
+      deadline,
       status,
       tags,
+      image_url: imageUrl,
     })
     .eq("id", campaignId);
 

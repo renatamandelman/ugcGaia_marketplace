@@ -37,6 +37,7 @@ export interface CampaignRow {
   deadline?: string | null;
   status: CampaignStatus;
   tags?: string[] | null;
+  image_url?: string | null;
   created_at: string;
 }
 

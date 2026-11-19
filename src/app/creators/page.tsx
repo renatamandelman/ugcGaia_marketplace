@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Section, SectionHeading } from "@/components/ui/section";
 import { CreatorCard } from "@/components/creator-card";
 import { SearchIcon } from "@/components/ui/icons";
+import { filterChipClasses, filterLabel } from "@/components/ui/filter-chip";
 import { createClient } from "@/lib/supabase/server";
 import {
   creatorsHref,
@@ -101,7 +102,7 @@ export default async function CreatorsPage({
 
       {/* Filtro por tags — chips toggleables */}
       {allTags.length > 0 && (
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-1.5">
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
           {allTags.map((tag) => (
             <Link
               key={tag}
@@ -109,13 +110,9 @@ export default async function CreatorsPage({
                 q: rawQ || undefined,
                 tags: toggleTagInList(selectedTags, tag),
               })}
-              className={
-                selectedTags.includes(tag)
-                  ? "rounded-full bg-ink px-3 py-1 text-xs font-semibold text-white transition-colors"
-                  : "rounded-full bg-brand/10 px-3 py-1 text-xs font-semibold text-brand transition-colors hover:bg-brand/20"
-              }
+              className={filterChipClasses(selectedTags.includes(tag))}
             >
-              #{tag}
+              {filterLabel(tag)}
             </Link>
           ))}
         </div>

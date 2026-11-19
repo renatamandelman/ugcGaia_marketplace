@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { CampaignFeedItem } from "@/lib/campaigns";
-import { formatBudgetRange } from "@/lib/format";
+import { formatBudgetRange, formatDeadlineDate } from "@/lib/format";
 import { Avatar } from "@/components/ui/avatar";
 import { StatusBadge, CategoryBadge } from "@/components/ui/badge";
 import { PremiumBadge } from "@/components/ui/premium-badge";
@@ -43,20 +43,33 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
           gradientFor(campaign.category)
         )}
       >
-        <div className="flex items-start justify-between">
+        {campaign.image_url ? (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={campaign.image_url}
+              alt=""
+              className="absolute inset-0 size-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-white/20 to-transparent" />
+          </>
+        ) : null}
+        <div className="relative flex items-start justify-between">
           <CategoryBadge category={campaign.category} />
           <StatusBadge status={campaign.status} />
         </div>
 
+        {campaign.image_url ? null : (
         <span
           className="pointer-events-none absolute -bottom-7 -right-2 select-none text-[7rem] font-bold leading-none text-white/50"
           aria-hidden
         >
           {campaign.brand?.charAt(0) ?? "G"}
         </span>
+        )}
 
         <div className="absolute inset-x-4 bottom-3.5 flex items-center gap-2.5">
-          <Avatar name={campaign.brand ?? "Marca"} size="sm" />
+          <Avatar name={campaign.brand ?? "Marca"} size="sm" src={campaign.brand_avatar} />
           <span className="text-sm font-semibold text-ink drop-shadow-sm">
             {campaign.brand ?? "Marca"}
           </span>
@@ -99,10 +112,7 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
             </dt>
             <dd className="mt-0.5 text-xs font-medium text-ink">
               {campaign.deadline
-                ? new Date(campaign.deadline).toLocaleDateString("es-AR", {
-                    day: "numeric",
-                    month: "short",
-                  })
+                ? formatDeadlineDate(campaign.deadline)
                 : "Sin fecha"}
             </dd>
           </div>

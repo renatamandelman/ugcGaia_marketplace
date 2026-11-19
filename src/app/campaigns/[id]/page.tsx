@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { formatBudgetRange, deadlineLabel } from "@/lib/format";
+import { formatBudgetRange, deadlineLabel, formatDeadlineDate } from "@/lib/format";
 import { Avatar } from "@/components/ui/avatar";
 import { StatusBadge, CategoryBadge } from "@/components/ui/badge";
 import { PremiumBadge } from "@/components/ui/premium-badge";
@@ -38,7 +38,7 @@ export default async function CampaignDetailPage({
   const { data: row } = await supabase
     .from("campaigns")
     .select(
-      "id, brand_id, title, description, category, budget_min, budget_max, deliverables, deadline, status, tags, created_at, profiles(full_name, plan)"
+      "id, brand_id, title, description, category, budget_min, budget_max, deliverables, deadline, status, tags, image_url, created_at, profiles(full_name, plan, avatar_url)"
     )
     .eq("id", id)
     .single();
@@ -46,9 +46,14 @@ export default async function CampaignDetailPage({
   if (!row) notFound();
 
   type BrandRelation =
-  | { full_name: string | null; plan?: string | null }
-  | { full_name: string | null; plan?: string | null }[]
+  | { full_name: string | null; plan?: string | null; avatar_url?: string | null }
+  | { full_name: string | null; plan?: string | null; avatar_url?: string | null }[]
   | null;
+
+function brandAvatar(relation: BrandRelation): string | null {
+  const entry = Array.isArray(relation) ? relation[0] : relation;
+  return entry?.avatar_url ?? null;
+}
 
 function brandName(relation: BrandRelation): string {
   const entry = Array.isArray(relation) ? relation[0] : relation;
@@ -64,6 +69,7 @@ const campaign = {
     ...row,
     brand: brandName(row.profiles as BrandRelation),
     brandPremium: brandIsPremium(row.profiles as BrandRelation),
+    brandAvatar: brandAvatar(row.profiles as BrandRelation),
   };
   const closed = campaign.status !== "open";
   const isOwner = user != null && campaign.brand_id === user.id;
@@ -112,7 +118,7 @@ const campaign = {
           )}
 
           <div className="mt-4 flex items-center gap-2.5">
-            <Avatar name={campaign.brand} size="md" />
+            <Avatar name={campaign.brand} size="md" src={campaign.brandAvatar} />
             <div>
               <p className="flex flex-wrap items-center gap-1.5 text-sm font-semibold text-ink">
                 {campaign.brand}
@@ -123,6 +129,15 @@ const campaign = {
               </p>
             </div>
           </div>
+
+          {campaign.image_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={campaign.image_url}
+              alt={campaign.title}
+              className="mt-8 max-h-[420px] w-full rounded-2xl border border-bone object-cover"
+            />
+          ) : null}
 
           <div className="mt-8 space-y-8">
             <div>
@@ -178,9 +193,16 @@ const campaign = {
                   Deadline
                 </dt>
                 <dd className="text-sm font-medium text-ink">
-                  {campaign.deadline
-                    ? deadlineLabel(campaign.deadline)
-                    : "Sin fecha límite"}
+                  {campaign.deadline ? (
+                    <span className="flex flex-col items-end">
+                      <span>{formatDeadlineDate(campaign.deadline)}</span>
+                      <span className="text-xs font-normal text-taupe">
+                        {deadlineLabel(campaign.deadline)}
+                      </span>
+                    </span>
+                  ) : (
+                    "Sin fecha límite"
+                  )}
                 </dd>
               </div>
               <div className="flex items-center justify-between">

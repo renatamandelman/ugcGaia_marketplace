@@ -32,7 +32,7 @@ export default async function CampaignsPage() {
   let query = supabase
     .from("campaigns")
     .select(
-      "id, title, description, category, budget_min, budget_max, deliverables, deadline, status, tags, created_at, profiles(full_name, plan)"
+      "id, title, description, category, budget_min, budget_max, deliverables, deadline, status, tags, image_url, created_at, profiles(full_name, plan, avatar_url)"
     )
     .order("created_at", { ascending: false });
 

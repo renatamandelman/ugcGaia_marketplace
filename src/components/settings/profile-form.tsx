@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { TagsInput } from "@/components/ui/tags-input";
 import { TikTokIcon, InstagramIcon, YouTubeIcon } from "@/components/ui/icons";
+import { ImageUploader } from "@/components/ui/image-uploader";
 import type { Profile } from "@/lib/db-types";
 
 interface ProfileSettingsFormProps {
@@ -189,8 +190,8 @@ export function ProfileSettingsForm({ profile }: ProfileSettingsFormProps) {
                     label="📷"
                     userId={profile.id}
                     folder="avatars"
-                    onUploaded={setAvatarUrl}
-                    compact
+                        onUploaded={setAvatarUrl}
+                    variant="pill"
                   />
                 </div>
               </div>
@@ -229,7 +230,7 @@ export function ProfileSettingsForm({ profile }: ProfileSettingsFormProps) {
           </Field>
           <Field label="Ubicación">
             <div className="relative">
-              <span className="absolute left-3.5 top-2.5 text-taupe">📍</span>
+              <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-taupe">📍</span>
               <input
                 type="text"
                 value={location}
@@ -241,7 +242,7 @@ export function ProfileSettingsForm({ profile }: ProfileSettingsFormProps) {
           </Field>
           <Field label="Tarifa base (USD por entregable)">
             <div className="relative">
-              <span className="absolute left-3.5 top-2.5 text-taupe">US$</span>
+              <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-taupe">US$</span>
               <input
                 type="number"
                 inputMode="decimal"
@@ -338,115 +339,7 @@ export function ProfileSettingsForm({ profile }: ProfileSettingsFormProps) {
   );
 }
 
-interface ImageUploaderProps {
-  label: string;
-  userId: string;
-  folder: "banners" | "avatars";
-  onUploaded: (url: string) => void;
-  compact?: boolean;
-}
-
-const MAX_IMAGE_SIZE_MB = 5;
-
-function ImageUploader({
-  label,
-  userId,
-  folder,
-  onUploaded,
-  compact = false,
-}: ImageUploaderProps) {
-  const [uploading, setUploading] = useState(false);
-  const [uploadError, setUploadError] = useState<string | null>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const supabase = createClient();
-
-  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setUploading(true);
-    setUploadError(null);
-
-    // Validación local antes de tocar la red
-    if (!file.type.startsWith("image/")) {
-      setUploadError("El archivo no es una imagen (JPG, PNG o WebP).");
-      setUploading(false);
-      return;
-    }
-    if (file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) {
-      setUploadError(
-        `La imagen pesa más de ${MAX_IMAGE_SIZE_MB}MB. Comprimila y probá de nuevo.`
-      );
-      setUploading(false);
-      return;
-    }
-
-    // Health-check del bucket: si no existe, el upload falla con
-    // mensajes confusos. Mejor avisar antes.
-    const { error: listError } = await supabase.storage
-      .from("media")
-      .list(folder, { limit: 1 });
-
-    if (listError) {
-      setUploadError(
-        "El bucket de imágenes (media) no está configurado todavía. Ejecutá supabase/media-storage.sql en Supabase → SQL Editor."
-      );
-      setUploading(false);
-      return;
-    }
-
-    const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
-    const path = `${folder}/${userId}.${ext}`;
-
-    const { error } = await supabase.storage
-      .from("media")
-      .upload(path, file, { upsert: true });
-
-    if (error) {
-      setUploadError(`No se pudo subir la imagen: ${error.message}`);
-      setUploading(false);
-      return;
-    }
-
-    const { data } = supabase.storage.from("media").getPublicUrl(path);
-    onUploaded(data.publicUrl);
-    setUploading(false);
-
-    // Reset del input para poder elegir el mismo archivo de nuevo
-    if (inputRef.current) inputRef.current.value = "";
-  }
-
-  return (
-    <div className="flex flex-col items-center gap-1">
-      <button
-        type="button"
-        onClick={() => inputRef.current?.click()}
-        disabled={uploading}
-        className={
-          compact
-            ? "rounded-full border border-white/70 bg-white/90 px-2 py-1 text-xs font-semibold text-ink shadow-sm backdrop-blur-md transition-colors hover:bg-white disabled:opacity-60"
-            : "rounded-lg border border-white/40 bg-white/20 px-3 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur-md transition-colors hover:bg-white/40 disabled:opacity-60"
-        }
-      >
-        {uploading ? "Subiendo..." : label}
-      </button>
-      {uploadError && (
-        <p className="max-w-[240px] text-center text-[10px] font-semibold leading-tight text-red-500">
-          {uploadError}
-        </p>
-      )}
-      <input
-        ref={inputRef}
-        type="file"
-        accept="image/jpeg,image/png,image/webp"
-        onChange={handleFileChange}
-        className="hidden"
-      />
-    </div>
-  );
-}
-
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+export function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="space-y-1.5">
       <label className="text-sm font-bold text-ink">{label}</label>
@@ -455,7 +348,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-function SocialLinkField({
+export function SocialLinkField({
   platform,
   placeholder,
   value,

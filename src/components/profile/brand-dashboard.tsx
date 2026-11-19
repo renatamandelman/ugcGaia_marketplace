@@ -20,6 +20,7 @@ import {
 import {
   daysUntilDeadline,
   deadlineLabel,
+  formatDeadlineDate,
   formatBudget,
   formatBudgetRange,
 } from "@/lib/format";
@@ -465,6 +466,7 @@ function CampaignCard({
                   }`}
                 >
                   <ClockIcon width={14} height={14} />
+                  {formatDeadlineDate(campaign.deadline)} ·{" "}
                   {deadlineLabel(campaign.deadline)}
                 </span>
               ) : null}
